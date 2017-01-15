@@ -1,4 +1,4 @@
-var Bolt = function(x, y, rad) {
+Bolt = function(x, y, rad) {
   this.x = x + (PLAYER_RADIUS * Math.cos(rad));
   this.y = y + (PLAYER_RADIUS * Math.sin(rad));
   this.rad = rad;

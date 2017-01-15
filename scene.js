@@ -1,4 +1,4 @@
-var gScene = {
+gScene = {
   scene: 'title',
   level: 0,
   titleX: -776,
