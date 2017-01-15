@@ -1,3 +1,7 @@
+var PLAYER_RADIUS = 12;
+var PLAYER_SPEED = 4;
+var FRICTION = 0.8;
+
 gPlayer = {
   x: 0,
   y: 0,

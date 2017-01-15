@@ -6,10 +6,6 @@ var gBounds = {
   }
 }
 
-var PLAYER_RADIUS = 12;
-var PLAYER_SPEED = 4;
-var FRICTION = 0.8;
-
 var optionsTargets = [
   new Target(144, 506),
   new Target(400, 506)
