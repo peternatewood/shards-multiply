@@ -6,7 +6,7 @@ A shoot-em-up with free-movement.
   - [x] Horizontal and vertical
   - [x] Ship points toward cursor
   - [x] Friction
-  - [ ] Move through scene
+  - [ ] Move through mission area
 * [x] **Custom Mouse Cursor**
 * [ ] **Pre-game Hangar**
   - [x] Controls visualized on floor
@@ -21,3 +21,10 @@ A shoot-em-up with free-movement.
   - [ ] Missile Ammo
   - [ ] Laser Beam Battery
   - [ ] Clone Ship
+* [ ] **Missions**
+  - [ ] Powerups placed throughout area
+  - [ ] Unique boss per mission
+* [ ] **Enemy Ships**
+  - [ ] Several types of shard
+  - [ ] Large enemies break into component shards
+  - [ ] Shards maintain damage from previous stage
