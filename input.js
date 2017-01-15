@@ -92,3 +92,17 @@ gInput = {
     }
   }
 }
+
+function handleKeyDown(event) {
+  if (!event.repeat && gInput.validKey(event.key)) {
+    event.preventDefault();
+    gInput.press(event.key);
+  }
+}
+function handleKeyUp(event) {
+  if (typeof gInput[event.key] === 'number') gInput.release(event.key);
+}
+
+function handleMouseDown(event) { gInput.mousedown(event) }
+function handleMouseUp(event) { gInput.mouseup(event) }
+function handleMouseMove(event) { gInput.setMousePos(event) }
