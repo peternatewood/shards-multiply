@@ -28,3 +28,6 @@ A shoot-em-up with free-movement.
   - [ ] Several types of shard
   - [ ] Large enemies break into component shards
   - [ ] Shards maintain damage from previous stage
+* [ ] **Audio**
+  - [ ] Sound effects
+  - [ ] Music
