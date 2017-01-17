@@ -24,7 +24,7 @@ Bolt.prototype.update = function(collision) {
     this.x += this.xVel;
     this.y += this.yVel;
   }
-},
+}
 Bolt.prototype.render = function(context) {
   context.beginPath();
   switch (this.life) {

@@ -37,8 +37,6 @@ gPlayer = {
       if (collision) {
         this.xVel *= -1;
         this.yVel *= -1;
-        this.x = collision.x;
-        this.y = collision.y;
         break;
       }
     }

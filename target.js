@@ -5,13 +5,29 @@ Target = function(x, y) {
   return this;
 }
 Target.prototype.collide = function(other) {
-  var collide = Math.sqrt(Math.pow(other.x - this.x, 2) + Math.pow(other.y - this.y, 2)) < other.size;
-  if (this.life > 1 && collide && other.life == 4) this.life--;
+  var collision = false;
+  var rayToCenter = Math.sqrt(Math.pow(other.x - this.x, 2) + Math.pow(other.y - this.y, 2));
+  var collide = rayToCenter < other.size;
+
   if (collide) {
     var rad = Math.atan2(other.y - this.y, other.x - this.x);
-    return { x: this.x + ((other.size + 1) * Math.cos(rad)), y: this.y + ((other.size + 1) * Math.sin(rad)) }
+    collision = { x: this.x, y: this.y }
   }
-  else return false;
+  else if (other.xVel || other.yVel) {
+    var lastX = other.x - other.xVel;
+    var lastY = other.y - other.yVel;
+    var otherRay = Math.sqrt(Math.pow(other.x - lastX, 2) + Math.pow(other.y - lastY, 2));
+    collide = Math.sqrt(Math.pow(rayToCenter, 2) + Math.pow(otherRay)) < other.size;
+
+    if (collide) {
+      var rad = Math.atan2(lastY - this.y, lastX - this.x);
+      collision = { x: this.x, y: this.y }
+    }
+  }
+
+  if (this.life > 1 && collide && other.life == 4) this.life--;
+
+  return collision;
 }
 Target.prototype.render = function(context) {
   context.beginPath();
