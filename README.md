@@ -1,5 +1,10 @@
 # Shards Multiply
-A shoot-em-up with free-movement.
+A twin-stick shoot-em-up with free-movement. Each mission is full of enemy ships and priority targets. Eliminate the targets to summon the boss. All enemy ships are either shards or are composed of shards; larger ships break into shards as they take damage.
+
+## Status
+**Development:** Active<br/>
+**Version:** Alpha<br/>
+**Live on Website:** No
 
 ## Core Features
 * [ ] **Player Movement**
@@ -31,3 +36,21 @@ A shoot-em-up with free-movement.
 * [ ] **Audio**
   - [ ] Sound effects
   - [ ] Music
+
+## How to Play
+Aim your ship with the mouse and move using the keyboard. There are two modes of movement: moving in four directions relative to the screen, and moving through the mission area in the direction of the mouse. Normal, cardinal movement restricts the ship to the size of the screen, while firing thrusters propels the ship across the larger mission area, using the mouse cursor to determine which direction to go.
+
+Shards are the basic components of enemy ships. Individual shards have their own attack patterns, and ships made of shards will shatter into their components once they've taken enough damage.
+
+### Default Controls
+W - move up<br/>
+S - move down<br/>
+A - move left<br/>
+D - move right
+
+Spacebar* - fire thrusters
+
+Primary Mouse Button (left on most mice, right on left-handed mice) - fire plasma bolts (unlimited)<br/>
+Secondary Mouse Button* - fire loaded secondary weapon (ammunition-based)
+
+_*not yet implemented_
