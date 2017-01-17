@@ -25,6 +25,31 @@ Bolt.prototype.update = function(collision) {
     this.y += this.yVel;
   }
 }
+Bolt.prototype.collide = function(other) {
+  var collision = false;
+  var rayToCenter = Math.sqrt(Math.pow(other.x - this.x, 2) + Math.pow(other.y - this.y, 2));
+  var collide = rayToCenter < this.size;
+
+  if (collide) {
+    var rad = Math.atan2(other.y - this.y, other.x - this.x);
+    collision = { x: this.x, y: this.y }
+  }
+  else if (other.xVel || other.yVel) {
+    var lastX = other.x - other.xVel;
+    var lastY = other.y - other.yVel;
+    var otherRay = Math.sqrt(Math.pow(other.x - lastX, 2) + Math.pow(other.y - lastY, 2));
+    collide = Math.sqrt(Math.pow(rayToCenter, 2) + Math.pow(otherRay)) < this.size;
+
+    if (collide) {
+      var rad = Math.atan2(lastY - this.y, lastX - this.x);
+      collision = { x: this.x, y: this.y }
+    }
+  }
+
+  if (other.life > 1 && collide && this.life == 4) other.life--;
+
+  return collision;
+}
 Bolt.prototype.render = function(context) {
   context.beginPath();
   switch (this.life) {

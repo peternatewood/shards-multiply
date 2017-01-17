@@ -51,7 +51,7 @@ gPlayer = {
     this.projectiles.forEach(function(p) {
       var collision;
       for (var i in optionsTargets) {
-        collision = optionsTargets[i].collide(p);
+        collision = p.collide(optionsTargets[i]);
         if (collision) break;
       }
       if (!collision) collision = gBounds.collide(p);
