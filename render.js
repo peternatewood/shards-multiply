@@ -12,9 +12,14 @@ gRenderer = {
       case 'game':
         gScene.renderBack(this.context);
         gPlayer.render(this.context);
+        if (gScene.inTransition) gScene.renderTransition(this.context);
+        break;
+      case 'levelTitle':
+        gScene.renderLevelTitle(this.context);
         break;
     }
-    gInput.render(this.context);
+
+    if (!gScene.inTransition) gInput.render(this.context);
     // Debug display
     // this.context.font = '16px monospace';
     // this.context.fillStyle = '#FFF';

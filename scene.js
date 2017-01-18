@@ -2,14 +2,16 @@ gScene = {
   scene: 'title',
   level: 0,
   titleX: -776,
-  // titleX: 56,
   titleY: 128,
   title: [],
   selectProg: 0,
+  inTransition: false,
+  transitionProg: 0,
   change: function(scene) {
     switch (scene) {
       case 'hangar':
       case 'game':
+      case 'levelTitle':
         gInput.rotateCursor = false;
         break;
       case 'title':
@@ -19,15 +21,24 @@ gScene = {
     }
     this.scene = scene;
   },
+  transition: function(levelNum) {
+    this.inTransition = true;
+    this.level = levelNum;
+  },
   update: function() {
-    switch (this.scene) {
-      case 'title':
-        if (gInput.isActive('fire')) this.change('hangar');
-        break;
-      case 'hangar':
-      case 'game':
-        gPlayer.update();
-        break;
+    if (!this.inTransition) {
+      switch (this.scene) {
+        case 'title':
+          if (gInput.isActive('fire')) this.change('hangar');
+          break;
+        case 'hangar':
+        case 'game':
+          gPlayer.update();
+          break;
+        case 'levelTitle':
+          if (gInput.isActive('fire')) this.change('game');
+          break;
+      }
     }
   },
   renderTitle: function(context) {
@@ -234,6 +245,25 @@ gScene = {
       context.strokeText('Click mouse button to start', 400, this.titleY + 260);
     }
   },
+  renderLevelTitle: function(context) {
+    context.font = '32px courier';
+    context.fillStyle = '#FFF';
+    context.fillText('Level ' + this.level, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+    context.strokeStyle = '#FFF';
+    context.lineWidth = 2;
+    context.strokeText('Level ' + this.level, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+  },
+  renderTransition: function(context) {
+    context.fillStyle = 'rgba(0, 0, 0, ' + (this.transitionProg / 32) + ')';
+    context.fillRect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    this.transitionProg++;
+    if (this.transitionProg >= 32) {
+      this.change('levelTitle');
+      this.inTransition = false;
+      this.transitionProg = 0;
+      this.selectProg = 0;
+    }
+  },
   renderBack: function(context) {
     context.beginPath();
     context.moveTo(72, 24);
@@ -257,10 +287,12 @@ gScene = {
     this.renderCommand('right', 616, 372, context);
     // Start square
     if (gScene.scene == 'hangar') {
-      if (gPlayer.x > 544 && gPlayer.x < 688 && gPlayer.y > 64 && gPlayer.y < 208) {
-        this.selectProg = Math.min(32, this.selectProg + 1);
+      if (this.selectProg < 32) {
+        if (gPlayer.x > 544 && gPlayer.x < 688 && gPlayer.y > 64 && gPlayer.y < 208) this.selectProg++;
+        else if (this.selectProg > 0) this.selectProg = Math.max(0, this.selectProg - 2);
       }
-      else this.selectProg = Math.max(0, this.selectProg - 2);
+      if (!this.inTransition && this.selectProg == 32) this.transition(1);
+
       context.beginPath();
       context.moveTo(682, 64);
       context.lineTo(688, 70);
