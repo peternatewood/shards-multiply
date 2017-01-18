@@ -4,7 +4,8 @@ var PLAYER_RADIUS = 12;
 var PLAYER_SPEED = 4;
 var FRICTION = 0.8;
 var LEVELS = [
-  { l: 48, t: 24, r: 752, b: 576 }
+  { l: 48, t: 24, r: 752, b: 576 },
+  { l: 0, t: 0, r: 2000, b: 2000 }
 ];
 
 var gInput = {}
