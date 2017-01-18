@@ -1,31 +1,35 @@
 gRenderer = {
   frame: 0,
+  canvas: document.getElementById('canvas'),
+  context: this.canvas.getContext('2d'),
   render: function() {
     this.context.fillStyle = '#000';
     this.context.fillRect(0, 0, canvas.width, canvas.height);
 
     switch (gScene.scene) {
       case 'title':
-        gScene.renderTitle(this.context);
+        gScene.renderTitle();
         break;
       case 'hangar':
       case 'game':
-        gScene.renderBack(this.context);
-        gPlayer.render(this.context);
-        gScene.renderFore(this.context);
-        gPlayer.projectiles.forEach(function(p) { p.render(this.context) }.bind(this));
-        if (gScene.inTransition) gScene.renderTransition(this.context);
+        gScene.renderBack();
+        gPlayer.render();
+        gScene.renderFore();
+        gPlayer.projectiles.forEach(function(p) { p.render() }.bind(this));
+        if (gScene.inTransition) gScene.renderTransition();
         break;
       case 'levelTitle':
-        gScene.renderLevelTitle(this.context);
+        gScene.renderLevelTitle();
         break;
     }
 
-    if (!gScene.inTransition) gInput.render(this.context);
+    if (!gScene.inTransition) gInput.render();
     // Debug display
     // this.context.font = '16px monospace';
+    // this.context.textAlign = 'left';
     // this.context.fillStyle = '#FFF';
-    // this.context.fillText('Mouse: ' + gInput.mouseX + ', ' + gInput.mouseY + ' Player rad: ' + gPlayer.rad, 12, 12);
+    // this.context.fillText('gCamera: ' + gCamera.x + ', ' + gCamera.y + ' vel: ' + gCamera.xVel + ', ' + gCamera.yVel, 12, 12);
+
     this.frame = (this.frame + 1) % 60;
   }
 }

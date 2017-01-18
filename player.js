@@ -70,25 +70,26 @@ gPlayer = {
     });
     this.projectiles = liveProjectiles;
   },
-  render: function(context) {
-    context.beginPath();
-    context.moveTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad)), this.y + (PLAYER_RADIUS * Math.sin(this.rad)))
-    context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4))), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))));
-    context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2))), this.y + (PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))));
-    context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4))), this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))));
-    context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI)), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)));
-    context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4))), this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))));
-    context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2))), this.y + (PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))));
-    context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4))), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))));
-    context.closePath();
+  render: (function(context) {
+    function render() {
+      context.beginPath();
+      context.moveTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad)), this.y + (PLAYER_RADIUS * Math.sin(this.rad)))
+      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4))), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))));
+      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2))), this.y + (PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))));
+      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4))), this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))));
+      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI)), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)));
+      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4))), this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))));
+      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2))), this.y + (PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))));
+      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4))), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))));
+      context.closePath();
 
-    context.fillStyle = '#49D';
-    context.strokeStyle = '#FB7';
-    context.lineWidth = 3;
+      context.fillStyle = '#49D';
+      context.strokeStyle = '#FB7';
+      context.lineWidth = 3;
 
-    context.fill();
-    context.stroke();
-
-    // this.projectiles.forEach(function(p) { p.render(context) });
-  }
+      context.fill();
+      context.stroke();
+    }
+    return render;
+  })(gRenderer.context)
 }
