@@ -6,11 +6,6 @@ var gBounds = {
   }
 }
 
-var optionsTargets = [
-  new Target(144, 506),
-  new Target(400, 506)
-];
-
 function update() {
   gScene.update();
 }

@@ -12,6 +12,8 @@ gRenderer = {
       case 'game':
         gScene.renderBack(this.context);
         gPlayer.render(this.context);
+        gScene.renderFore(this.context);
+        gPlayer.projectiles.forEach(function(p) { p.render(this.context) }.bind(this));
         if (gScene.inTransition) gScene.renderTransition(this.context);
         break;
       case 'levelTitle':

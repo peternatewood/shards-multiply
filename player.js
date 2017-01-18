@@ -42,8 +42,8 @@ gPlayer = {
     this.xVel += this.xAcc;
     this.yVel += this.yAcc;
     var collision;
-    for (var i in optionsTargets) {
-      collision = this.collide(optionsTargets[i]);
+    for (var i in gScene.targets) {
+      collision = this.collide(gScene.targets[i]);
       if (collision) {
         this.xVel *= -1;
         this.yVel *= -1;
@@ -60,8 +60,8 @@ gPlayer = {
     var liveProjectiles = [];
     this.projectiles.forEach(function(p) {
       var collision;
-      for (var i in optionsTargets) {
-        collision = p.collide(optionsTargets[i]);
+      for (var i in gScene.targets) {
+        collision = p.collide(gScene.targets[i]);
         if (collision) break;
       }
       if (!collision && gBounds.collide(p)) p.dying = true;
@@ -89,8 +89,6 @@ gPlayer = {
     context.fill();
     context.stroke();
 
-    this.projectiles.forEach(function(p) {
-      p.render(context);
-    });
+    // this.projectiles.forEach(function(p) { p.render(context) });
   }
 }

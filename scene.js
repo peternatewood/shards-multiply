@@ -1,6 +1,7 @@
 gScene = {
   scene: 'title',
   level: 0,
+  targets: [],
   titleX: -776,
   titleY: 128,
   title: [],
@@ -10,6 +11,10 @@ gScene = {
   change: function(scene) {
     switch (scene) {
       case 'hangar':
+        this.targets = [
+          new Target(144, 506),
+          new Target(400, 506)
+        ];
       case 'game':
       case 'levelTitle':
         gInput.rotateCursor = false;
@@ -353,8 +358,6 @@ gScene = {
     context.strokeStyle = '#000';
     context.lineWidth = 2;
     context.stroke();
-
-    optionsTargets.forEach(function(t) { t.render(context) });
   },
   renderCommand: function(command, x, y, context) {
     context.beginPath();
@@ -460,5 +463,8 @@ gScene = {
         context.stroke();
         break;
     }
+  },
+  renderFore: function(context) {
+    this.targets.forEach(function(t) { t.render(context) });
   }
 }
