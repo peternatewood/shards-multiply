@@ -1,20 +1,3 @@
-var EnvelopeGenerator = function(context) {
-  this.attackTime = 0.1;
-  this.releaseTime = 0.1;
-
-  return this;
-}
-EnvelopeGenerator.prototype.trigger = function() {
-  now = context.currentTime;
-  this.param.cancelScheduledValues(now);
-  this.param.setValueAtTime(0, now);
-  this.param.linearRampToValueAtTime(1, now + this.attackTime);
-  this.param.linearRampToValueAtTime(0, now + this.attackTime + this.releaseTime);
-}
-EnvelopeGenerator.prototype.connect = function(param) {
-  this.param = param;
-}
-
 EffectChannel = function(context) {
   this.context = context;
   this.gain = context.createGain();
