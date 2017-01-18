@@ -27,6 +27,15 @@ EffectChannel.prototype.startBolt = function() {
   this.stop(now + 0.11);
 }
 
+MusicChannel = function(context) {
+  this.context = context;
+  this.gain = context.createGain();
+  this.gain.gain.value = 0;
+  this.gain.connect(this.context.destination);
+
+  return this;
+}
+
 gAudio = (function(context) {
   return {
     // context: context,
