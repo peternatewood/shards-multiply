@@ -35,22 +35,22 @@ gInput = {
     context.beginPath();
     switch (this.cursor) {
       case 'crosshairs':
-        context.moveTo(this.mouseX + (4 * Math.cos(this.rad)), this.mouseY + (4 * Math.sin(this.rad)));
-        context.lineTo(this.mouseX + (16 * Math.cos(this.rad)), this.mouseY + (16 * Math.sin(this.rad)));
-        context.moveTo(this.mouseX + (4 * Math.cos(this.rad + (Math.PI / 2))), this.mouseY + (4 * Math.sin(this.rad + (Math.PI / 2))));
-        context.lineTo(this.mouseX + (16 * Math.cos(this.rad + (Math.PI / 2))), this.mouseY + (16 * Math.sin(this.rad + (Math.PI / 2))));
-        context.moveTo(this.mouseX + (4 * Math.cos(this.rad + Math.PI)), this.mouseY + (4 * Math.sin(this.rad + Math.PI)));
-        context.lineTo(this.mouseX + (16 * Math.cos(this.rad + Math.PI)), this.mouseY + (16 * Math.sin(this.rad + Math.PI)));
-        context.moveTo(this.mouseX + (4 * Math.cos(this.rad - (Math.PI / 2))), this.mouseY - (4 * Math.sin(this.rad + (Math.PI / 2))));
-        context.lineTo(this.mouseX + (16 * Math.cos(this.rad - (Math.PI / 2))), this.mouseY - (16 * Math.sin(this.rad + (Math.PI / 2))));
-        context.moveTo(this.mouseX + (12 * Math.cos(this.rad + (Math.PI / 16))), this.mouseY + (12 * Math.sin(this.rad + (Math.PI / 16))));
-        context.arc(this.mouseX, this.mouseY, 12, this.rad + (Math.PI / 16), this.rad + (Math.PI * 7 / 16));
-        context.moveTo(this.mouseX + (12 * Math.cos(this.rad + (Math.PI * 9 / 16))), this.mouseY + (12 * Math.sin(this.rad + (Math.PI * 9 / 16))));
-        context.arc(this.mouseX, this.mouseY, 12, this.rad + (Math.PI * 9 / 16), this.rad + (Math.PI * 15 / 16));
-        context.moveTo(this.mouseX + (12 * Math.cos(this.rad + (Math.PI * 17 / 16))), this.mouseY + (12 * Math.sin(this.rad + (Math.PI * 17 / 16))));
-        context.arc(this.mouseX, this.mouseY, 12, this.rad + (Math.PI * 17 / 16), this.rad - (Math.PI * 9 / 16));
-        context.moveTo(this.mouseX + (12 * Math.cos(this.rad - (Math.PI * 7 / 16))), this.mouseY + (12 * Math.sin(this.rad - (Math.PI * 7 / 16))));
-        context.arc(this.mouseX, this.mouseY, 12, this.rad - (Math.PI * 7 / 16), this.rad - (Math.PI / 16));
+        context.moveTo(this.mouseX + (4 * Math.cos(rad)), this.mouseY + (4 * Math.sin(rad)));
+        context.lineTo(this.mouseX + (16 * Math.cos(rad)), this.mouseY + (16 * Math.sin(rad)));
+        context.moveTo(this.mouseX + (4 * Math.cos(rad + (Math.PI / 2))), this.mouseY + (4 * Math.sin(rad + (Math.PI / 2))));
+        context.lineTo(this.mouseX + (16 * Math.cos(rad + (Math.PI / 2))), this.mouseY + (16 * Math.sin(rad + (Math.PI / 2))));
+        context.moveTo(this.mouseX + (4 * Math.cos(rad + Math.PI)), this.mouseY + (4 * Math.sin(rad + Math.PI)));
+        context.lineTo(this.mouseX + (16 * Math.cos(rad + Math.PI)), this.mouseY + (16 * Math.sin(rad + Math.PI)));
+        context.moveTo(this.mouseX + (4 * Math.cos(rad - (Math.PI / 2))), this.mouseY - (4 * Math.sin(rad + (Math.PI / 2))));
+        context.lineTo(this.mouseX + (16 * Math.cos(rad - (Math.PI / 2))), this.mouseY - (16 * Math.sin(rad + (Math.PI / 2))));
+        context.moveTo(this.mouseX + (12 * Math.cos(rad + (Math.PI / 16))), this.mouseY + (12 * Math.sin(rad + (Math.PI / 16))));
+        context.arc(this.mouseX, this.mouseY, 12, rad + (Math.PI / 16), rad + (Math.PI * 7 / 16));
+        context.moveTo(this.mouseX + (12 * Math.cos(rad + (Math.PI * 9 / 16))), this.mouseY + (12 * Math.sin(rad + (Math.PI * 9 / 16))));
+        context.arc(this.mouseX, this.mouseY, 12, rad + (Math.PI * 9 / 16), rad + (Math.PI * 15 / 16));
+        context.moveTo(this.mouseX + (12 * Math.cos(rad + (Math.PI * 17 / 16))), this.mouseY + (12 * Math.sin(rad + (Math.PI * 17 / 16))));
+        context.arc(this.mouseX, this.mouseY, 12, rad + (Math.PI * 17 / 16), rad - (Math.PI * 9 / 16));
+        context.moveTo(this.mouseX + (12 * Math.cos(rad - (Math.PI * 7 / 16))), this.mouseY + (12 * Math.sin(rad - (Math.PI * 7 / 16))));
+        context.arc(this.mouseX, this.mouseY, 12, rad - (Math.PI * 7 / 16), rad - (Math.PI / 16));
         context.strokeStyle = '#2D2';
         context.lineWidth = 2;
         context.stroke();
