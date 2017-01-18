@@ -1,11 +1,3 @@
-var gBounds = {
-  0: { l: 48, t: 24, r: 752, b: 576 },
-  collide: function(p) {
-    if (p.x - p.size < this[0].l || p.y - p.size < this[0].t || p.x + p.size > this[0].r || p.y + p.size > this[0].b) return true;
-    return false;
-  }
-}
-
 function update() {
   gScene.update();
 }

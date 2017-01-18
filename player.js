@@ -50,8 +50,8 @@ gPlayer = {
         break;
       }
     }
-    this.x = Math.min(gBounds[0].r - 20, Math.max(gBounds[0].l + 20, this.x + this.xVel * PLAYER_SPEED));
-    this.y = Math.min(gBounds[0].b - 20, Math.max(gBounds[0].t + 20, this.y + this.yVel * PLAYER_SPEED));
+    this.x = Math.min(gScene.bounds.r - 20, Math.max(gScene.bounds.l + 20, this.x + this.xVel * PLAYER_SPEED));
+    this.y = Math.min(gScene.bounds.b - 20, Math.max(gScene.bounds.t + 20, this.y + this.yVel * PLAYER_SPEED));
 
     this.rad = Math.atan2(gInput.mouseY - this.y, gInput.mouseX - this.x);
 
@@ -64,7 +64,7 @@ gPlayer = {
         collision = p.collide(gScene.targets[i]);
         if (collision) break;
       }
-      if (!collision && gBounds.collide(p)) p.dying = true;
+      if (!collision && gScene.bounds.collide(p)) p.dying = true;
       p.update();
       if (p.life > 0) liveProjectiles.push(p);
     });

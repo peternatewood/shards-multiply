@@ -8,6 +8,13 @@ gScene = {
   selectProg: 0,
   inTransition: false,
   transitionProg: 0,
+  bounds: {
+    l: 48, t: 24, r: 752, b: 576,
+    collide: function(p) {
+      if (p.x - p.size < this.l || p.y - p.size < this.t || p.x + p.size > this.r || p.y + p.size > this.b) return true;
+      return false;
+    }
+  },
   change: function(scene) {
     switch (scene) {
       case 'hangar':
