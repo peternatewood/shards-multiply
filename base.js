@@ -12,5 +12,6 @@ var gRenderer = {}
 
 var Target = function() { return this }
 var Bolt = function() { return this }
+var ChannelBase = function() { return this }
 var EffectChannel = function() { return this }
 var MusicChannel = function() { return this }
