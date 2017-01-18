@@ -39,8 +39,8 @@ gPlayer = {
     if (gInput.isActive('right')) this.xAcc++;
     if (gInput.isActive('up')) this.yAcc--;
     if (gInput.isActive('down')) this.yAcc++;
-    this.xVel += this.xAcc;
-    this.yVel += this.yAcc;
+    this.xVel = round(this.xVel + this.xAcc);
+    this.yVel = round(this.yVel + this.yAcc);
     var collision;
     for (var i in gScene.targets) {
       collision = this.collide(gScene.targets[i]);
