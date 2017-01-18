@@ -22,6 +22,7 @@ gScene = {
           new Target(144, 506),
           new Target(400, 506)
         ];
+        this.setBounds();
       case 'game':
       case 'levelTitle':
         gInput.rotateCursor = false;
@@ -36,6 +37,14 @@ gScene = {
   transition: function(levelNum) {
     this.inTransition = true;
     this.level = levelNum;
+  },
+  setBounds: function() {
+    if (LEVELS[this.level]) {
+      this.bounds.l = LEVELS[this.level].l;
+      this.bounds.t = LEVELS[this.level].t;
+      this.bounds.r = LEVELS[this.level].r;
+      this.bounds.b = LEVELS[this.level].b;
+    }
   },
   update: function() {
     if (!this.inTransition) {
