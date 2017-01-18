@@ -11,44 +11,31 @@ Bolt = function(x, y, rad) {
   return this;
 }
 Bolt.delay = 140;
-Bolt.prototype.update = function(collision) {
-  if (collision) {
-    this.dying = true;
-    if (collision instanceof Object) {
-      this.x = collision.x;
-      this.y = collision.y;
-    }
-  }
-
+Bolt.prototype.update = function() {
   if (! this.dying) {
     this.x += this.xVel;
     this.y += this.yVel;
   }
 }
 Bolt.prototype.collide = function(other) {
-  var collision = false;
   var rayToCenter = Math.sqrt(Math.pow(other.x - this.x, 2) + Math.pow(other.y - this.y, 2));
   var collide = rayToCenter < this.size;
 
+  if (!collide) {
+    var lastX = this.x - this.xVel;
+    var lastY = this.y - this.yVel;
+    var lastRay = Math.sqrt(Math.pow(lastX - this.x, 2) + Math.pow(lastY - this.y, 2));
+    collide = Math.sqrt(Math.pow(rayToCenter, 2) + Math.pow(lastRay)) < this.size;
+  }
+
   if (collide) {
-    var rad = Math.atan2(other.y - this.y, other.x - this.x);
-    collision = { x: this.x, y: this.y }
-  }
-  else if (other.xVel || other.yVel) {
-    var lastX = other.x - other.xVel;
-    var lastY = other.y - other.yVel;
-    var otherRay = Math.sqrt(Math.pow(other.x - lastX, 2) + Math.pow(other.y - lastY, 2));
-    collide = Math.sqrt(Math.pow(rayToCenter, 2) + Math.pow(otherRay)) < this.size;
-
-    if (collide) {
-      var rad = Math.atan2(lastY - this.y, lastX - this.x);
-      collision = { x: this.x, y: this.y }
-    }
+    this.x = other.x;
+    this.y = other.y;
+    this.dying = true;
+    if (other.life > 1 && this.life == 4) other.life--;
   }
 
-  if (other.life > 1 && collide && this.life == 4) other.life--;
-
-  return collision;
+  return collide;
 }
 Bolt.prototype.render = function(context) {
   context.beginPath();

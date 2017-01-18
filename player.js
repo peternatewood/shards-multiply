@@ -17,8 +17,22 @@ gPlayer = {
     if (this.allowFire) {
       this.projectiles.push(new Bolt(this.x, this.y, this.rad));
       this.allowFire = false;
+      gAudio.eChan1.startBolt();
       setTimeout(function() { this.allowFire = true }.bind(this), Bolt.delay);
     }
+  },
+  collide: function(other) {
+    var rayToCenter = Math.sqrt(Math.pow(other.x - this.x, 2) + Math.pow(other.y - this.y, 2));
+    var collide = rayToCenter < this.size;
+
+    if (!collide) {
+      var lastX = this.x - this.xVel;
+      var lastY = this.y - this.yVel;
+      var lastRay = Math.sqrt(Math.pow(this.x - lastX, 2) + Math.pow(this.y - lastY, 2));
+      collide = Math.sqrt(Math.pow(rayToCenter, 2) + Math.pow(lastRay)) < other.size;
+    }
+
+    return collide;
   },
   update: function() {
     this.xAcc = 0;
@@ -33,7 +47,7 @@ gPlayer = {
     this.yVel += this.yAcc;
     var collision;
     for (var i in optionsTargets) {
-      collision = optionsTargets[i].collide({ x: this.x, y: this.y, size: 18 });
+      collision = this.collide(optionsTargets[i]);
       if (collision) {
         this.xVel *= -1;
         this.yVel *= -1;
@@ -54,8 +68,8 @@ gPlayer = {
         collision = p.collide(optionsTargets[i]);
         if (collision) break;
       }
-      if (!collision) collision = gBounds.collide(p);
-      p.update(collision);
+      if (!collision && gBounds.collide(p)) p.dying = true;
+      p.update();
       if (p.life > 0) liveProjectiles.push(p);
     });
     this.projectiles = liveProjectiles;
