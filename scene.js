@@ -359,6 +359,41 @@ gScene = {
     context.lineWidth = 2;
     context.stroke();
   },
+  renderKey: function(command, x, y, context) {
+    var offset = gInput.isActive(command) ? 3 : 0;
+
+    context.strokeText(gInput[command].toUpperCase(), x + offset, y + 12 + offset);
+    context.fillText(gInput[command].toUpperCase(), x + offset, y + 12 + offset);
+    if (gInput.isActive(command)) {
+      context.moveTo(x - 17, y + 30);
+      context.lineTo(x - 20, y + 27);
+      context.lineTo(x - 20, y - 7);
+      context.lineTo(x - 17, y - 10);
+      context.lineTo(x + 17, y - 10);
+      context.lineTo(x + 20, y - 7);
+      context.lineTo(x + 20, y - 4);
+      context.lineTo(x - 11, y - 4);
+      context.lineTo(x - 14, y - 1);
+      context.lineTo(x - 14, y + 30);
+      context.closePath();
+      context.fillStyle = '#222';
+      context.fill();
+    }
+
+    context.beginPath();
+    context.moveTo(x - 17, y + 30);
+    context.lineTo(x - 20, y + 27);
+    context.lineTo(x - 20, y - 7);
+    context.lineTo(x - 17, y - 10);
+    context.lineTo(x + 17, y - 10);
+    context.lineTo(x + 20, y - 7);
+    context.lineTo(x + 20, y + 27);
+    context.lineTo(x + 17, y + 30);
+    context.closePath();
+    context.strokeStyle = '#000';
+    context.lineWidth = 3;
+    context.stroke();
+  },
   renderCommand: function(command, x, y, context) {
     context.beginPath();
     context.moveTo(x - 72, y - 90);
@@ -429,38 +464,7 @@ gScene = {
         context.closePath();
         break;
       default:
-        var offset = gInput.isActive(command) ? 3 : 0;
-        context.strokeText(gInput[command].toUpperCase(), x + offset, y + 12 + offset);
-        context.fillText(gInput[command].toUpperCase(), x + offset, y + 12 + offset);
-        if (gInput.isActive(command)) {
-          context.moveTo(x - 17, y + 30);
-          context.lineTo(x - 20, y + 27);
-          context.lineTo(x - 20, y - 7);
-          context.lineTo(x - 17, y - 10);
-          context.lineTo(x + 17, y - 10);
-          context.lineTo(x + 20, y - 7);
-          context.lineTo(x + 20, y - 4);
-          context.lineTo(x - 11, y - 4);
-          context.lineTo(x - 14, y - 1);
-          context.lineTo(x - 14, y + 30);
-          context.closePath();
-          context.fillStyle = '#222';
-          context.fill();
-        }
-
-        context.beginPath();
-        context.moveTo(x - 17, y + 30);
-        context.lineTo(x - 20, y + 27);
-        context.lineTo(x - 20, y - 7);
-        context.lineTo(x - 17, y - 10);
-        context.lineTo(x + 17, y - 10);
-        context.lineTo(x + 20, y - 7);
-        context.lineTo(x + 20, y + 27);
-        context.lineTo(x + 17, y + 30);
-        context.closePath();
-        context.strokeStyle = '#000';
-        context.lineWidth = 3;
-        context.stroke();
+        this.renderKey(command, x, y, context);
         break;
     }
   },
