@@ -3,10 +3,9 @@ gPlayer = {
   y: 0,
   xVel: 0,
   yVel: 0,
-  xAcc: 0,
-  yAcc: 0,
   rad: 0,
   size: 20,
+  speed: PLAYER_SPEED,
   allowFire: true,
   projectiles: [],
   fire: function() {
@@ -31,16 +30,27 @@ gPlayer = {
     return collide;
   },
   update: function() {
-    this.xAcc = 0;
-    this.yAcc = 0;
+    var xAcc = 0;
+    var yAcc = 0;
     this.xVel *= FRICTION;
     this.yVel *= FRICTION;
-    if (gInput.isActive('left')) this.xAcc--;
-    if (gInput.isActive('right')) this.xAcc++;
-    if (gInput.isActive('up')) this.yAcc--;
-    if (gInput.isActive('down')) this.yAcc++;
-    this.xVel = round(this.xVel + this.xAcc);
-    this.yVel = round(this.yVel + this.yAcc);
+    if (gInput.isActive('thrust')) {
+      this.speed = THRUSTER_SPEED;
+      xAcc = Math.cos(this.rad);
+      yAcc = Math.sin(this.rad);
+    }
+    else {
+      this.speed = PLAYER_SPEED;
+      if (gInput.isActive('left')) xAcc--;
+      if (gInput.isActive('right')) xAcc++;
+      if (gInput.isActive('up')) yAcc--;
+      if (gInput.isActive('down')) yAcc++;
+    }
+    // this.xVel = Math.abs(this.xVel) > 2e-20 ? this.xVel + xAcc : 0;
+    // this.yVel = Math.abs(this.yVel) > 2e-20 ? this.yVel + yAcc : 0;
+    this.xVel += xAcc;
+    this.yVel += yAcc;
+
     var collision;
     for (var i in gScene.targets) {
       collision = this.collide(gScene.targets[i]);
@@ -50,10 +60,10 @@ gPlayer = {
         break;
       }
     }
-    this.x = Math.min(gScene.bounds.r - 20, Math.max(gScene.bounds.l + 20, this.x + this.xVel * PLAYER_SPEED));
-    this.y = Math.min(gScene.bounds.b - 20, Math.max(gScene.bounds.t + 20, this.y + this.yVel * PLAYER_SPEED));
+    this.x = Math.min(gScene.bounds.r - 20, Math.max(gScene.bounds.l + 20, this.x + this.xVel * this.speed));
+    this.y = Math.min(gScene.bounds.b - 20, Math.max(gScene.bounds.t + 20, this.y + this.yVel * this.speed));
 
-    this.rad = Math.atan2(gInput.mouseY - this.y, gInput.mouseX - this.x);
+    this.rad = Math.atan2(gInput.mouseY - (this.y - gCamera.y), gInput.mouseX - (this.x - gCamera.x));
 
     if (gInput.isActive('fire')) this.fire();
     // Loop through projectiles and only keep the ones still in the level bounds
@@ -73,14 +83,14 @@ gPlayer = {
   render: (function(context) {
     function render() {
       context.beginPath();
-      context.moveTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad)), this.y + (PLAYER_RADIUS * Math.sin(this.rad)))
-      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4))), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))));
-      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2))), this.y + (PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))));
-      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4))), this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))));
-      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI)), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)));
-      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4))), this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))));
-      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2))), this.y + (PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))));
-      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4))), this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))));
+      context.moveTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad)) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad)) - gCamera.y);
+      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))) - gCamera.y);
+      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2))) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))) - gCamera.y);
+      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))) - gCamera.y);
+      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI)) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)) - gCamera.y);
+      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))) - gCamera.y);
+      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2))) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))) - gCamera.y);
+      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))) - gCamera.y);
       context.closePath();
 
       context.fillStyle = '#49D';

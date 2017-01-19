@@ -53,8 +53,9 @@
           case 'title':
             if (gInput.isActive('fire')) this.change('hangar');
             break;
-          case 'hangar':
           case 'game':
+            gCamera.update();
+          case 'hangar':
             gPlayer.update();
             break;
           case 'levelTitle':
@@ -264,6 +265,7 @@
         context.textAlign = 'center';
         context.strokeStyle = '#FED';
         context.lineWidth = 2;
+        context.font = '32px courier';
         context.strokeText('Click mouse button to start', 400, this.titleY + 260);
       }
     },
@@ -284,6 +286,8 @@
         this.inTransition = false;
         this.transitionProg = 0;
         this.selectProg = 0;
+        this.level = 1;
+        this.setBounds();
       }
     },
     renderBack: function() {
@@ -350,6 +354,7 @@
         // Here to Start
         context.font = '24px helvetica';
         context.textBaseline = 'middle';
+        context.textAlign = 'center';
         context.strokeStyle = '#333';
         context.fillStyle = '#000';
         context.lineWidth = 2;
@@ -380,14 +385,14 @@
       else {
         switch (this.level) {
           case 1:
-            var centerX = (this.bounds.r - this.bounds.l) / 2;
-            var centerY = (this.bounds.b - this.bounds.t) / 2;
-            var grad = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, this.bounds.b - this.bounds.t);
-            grad.addColorStop(0, '#CCC');
-            grad.addColorStop(1, '#888');
+            var centerX = ((this.bounds.r - this.bounds.l) / 2) - gCamera.x;
+            var centerY = ((this.bounds.b - this.bounds.t) / 2) - gCamera.y;
+            var grad = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, (this.bounds.b - this.bounds.t) / 2);
+            grad.addColorStop(0, '#EEE');
+            grad.addColorStop(1, '#000');
 
             context.fillStyle = grad;
-            context.fillRect(0, 0, this.bounds.r, this.bounds.b);
+            context.fillRect(0 - gCamera.x, 0 - gCamera.y, this.bounds.r, this.bounds.b);
             break;
         }
       }
@@ -447,6 +452,7 @@
 
       context.font = '24px helvetica';
       context.textBaseline = 'middle';
+      context.textAlign = 'center';
       context.fillStyle = '#000';
       context.strokeStyle = '#333';
       context.lineWidth = 2;

@@ -16,7 +16,6 @@ function init() {
   SCREEN_WIDTH = gRenderer.canvas.width;
   SCREEN_HEIGHT = gRenderer.canvas.height;
 
-  gRenderer.context.font = '32px courier';
   gPlayer.x = (gRenderer.canvas.width / 2) - PLAYER_RADIUS;
   gPlayer.y = (gRenderer.canvas.height * 0.75) - PLAYER_RADIUS;
 
