@@ -272,6 +272,7 @@
     renderLevelTitle: function() {
       context.font = '32px courier';
       context.fillStyle = '#FFF';
+      context.textAlign = 'center';
       context.fillText('Level ' + this.level, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
       context.strokeStyle = '#FFF';
       context.lineWidth = 2;
