@@ -60,8 +60,8 @@ gPlayer = {
         break;
       }
     }
-    this.x = Math.min(gScene.bounds.r - 20, Math.max(gScene.bounds.l + 20, this.x + this.xVel * this.speed));
-    this.y = Math.min(gScene.bounds.b - 20, Math.max(gScene.bounds.t + 20, this.y + this.yVel * this.speed));
+    this.x = Math.min(Math.min(gCamera.x + SCREEN_WIDTH, gScene.bounds.r) - 20, Math.max(Math.max(gCamera.x, gScene.bounds.l) + 20, this.x + this.xVel * this.speed));
+    this.y = Math.min(Math.min(gCamera.y + SCREEN_HEIGHT, gScene.bounds.b) - 20, Math.max(Math.max(gCamera.y, gScene.bounds.t) + 20, this.y + this.yVel * this.speed));
 
     this.rad = Math.atan2(gInput.mouseY - (this.y - gCamera.y), gInput.mouseX - (this.x - gCamera.x));
 
