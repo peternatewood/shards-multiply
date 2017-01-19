@@ -25,11 +25,11 @@ gRenderer = {
 
     if (!gScene.inTransition) gInput.render();
     // Debug display
-    this.context.font = '16px monospace';
-    this.context.textAlign = 'left';
-    this.context.fillStyle = '#FFF';
-    this.context.fillText('gCamera: ' + gCamera.x + ', ' + gCamera.y + ' vel: ' + gCamera.xVel + ', ' + gCamera.yVel, 12, 12);
-    this.context.fillText('gPlayer: ' + gPlayer.x + ', ' + gPlayer.y + ' vel: ' + gPlayer.xVel + ', ' + gPlayer.yVel, 12, 36);
+    // this.context.font = '16px monospace';
+    // this.context.textAlign = 'left';
+    // this.context.fillStyle = '#FFF';
+    // this.context.fillText('gCamera: ' + gCamera.x + ', ' + gCamera.y + ' vel: ' + gCamera.xVel + ', ' + gCamera.yVel, 12, 12);
+    // this.context.fillText('gPlayer: ' + gPlayer.x + ', ' + gPlayer.y + ' vel: ' + gPlayer.xVel + ', ' + gPlayer.yVel, 12, 36);
 
     this.frame = (this.frame + 1) % 60;
   }
