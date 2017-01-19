@@ -105,7 +105,7 @@ function handleKeyDown(event) {
   }
 }
 function handleKeyUp(event) {
-  if (typeof gInput[event.key] === 'number') gInput.release(event.key);
+  if (typeof gInput[event.key.toLowerCase()] === 'number') gInput.release(event.key);
 }
 
 function handleMouseDown(event) { gInput.mousedown(event) }
