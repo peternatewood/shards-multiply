@@ -46,8 +46,6 @@ gPlayer = {
       if (gInput.isActive('up')) yAcc--;
       if (gInput.isActive('down')) yAcc++;
     }
-    // this.xVel = Math.abs(this.xVel) > 2e-20 ? this.xVel + xAcc : 0;
-    // this.yVel = Math.abs(this.yVel) > 2e-20 ? this.yVel + yAcc : 0;
     this.xVel += xAcc;
     this.yVel += yAcc;
 
@@ -60,6 +58,10 @@ gPlayer = {
         break;
       }
     }
+
+    if (Math.abs(this.xVel) < 0.01) this.xVel = 0;
+    if (Math.abs(this.yVel) < 0.01) this.yVel = 0;
+
     this.x = Math.min(Math.min(gCamera.x + SCREEN_WIDTH, gScene.bounds.r) - 20, Math.max(Math.max(gCamera.x, gScene.bounds.l) + 20, this.x + this.xVel * this.speed));
     this.y = Math.min(Math.min(gCamera.y + SCREEN_HEIGHT, gScene.bounds.b) - 20, Math.max(Math.max(gCamera.y, gScene.bounds.t) + 20, this.y + this.yVel * this.speed));
 
