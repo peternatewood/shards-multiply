@@ -3,6 +3,7 @@ var SCREEN_HEIGHT = 0;
 var PLAYER_RADIUS = 12;
 var PLAYER_SPEED = 4;
 var THRUSTER_SPEED = 8;
+var CAMERA_SPEED = 64;
 var FRICTION = 0.8;
 var LEVELS = [
   { l: 48, t: 24, r: 752, b: 576 },
