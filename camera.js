@@ -1,10 +1,6 @@
 gCamera = {
   x: 0,
   y: 0,
-  xVel: 0,
-  yVel: 0,
-  xAcc: 0,
-  yAcc: 0,
   target: { x: 0, y: 0 },
   isInView: function(object) {
     return object.x + object.size > this.x && object.x - object.size < this.x + SCREEN_WIDTH && object.y + object.size > this.y && object.y - object.size < this.y + SCREEN_HEIGHT;
