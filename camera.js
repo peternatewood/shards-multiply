@@ -5,23 +5,20 @@ gCamera = {
   yVel: 0,
   xAcc: 0,
   yAcc: 0,
+  target: { x: 0, y: 0 },
   isInView: function(object) {
     return object.x + object.size > this.x && object.x - object.size < this.x + SCREEN_WIDTH && object.y + object.size > this.y && object.y - object.size < this.y + SCREEN_HEIGHT;
   },
   update: function() {
-    var xAcc = 0;
-    var yAcc = 0;
-    this.xVel *= FRICTION;
-    this.yVel *= FRICTION;
     if (gInput.isActive('thrust')) {
-      xAcc = Math.cos(gPlayer.rad);
-      yAcc = Math.sin(gPlayer.rad);
+      this.target.x = (gPlayer.x - (SCREEN_WIDTH / 2)) + (200 * Math.cos(gPlayer.rad));
+      this.target.y = (gPlayer.y - (SCREEN_HEIGHT / 2)) + (200 * Math.sin(gPlayer.rad));
     }
-    // this.xVel = Math.abs(xAcc) > 2e-20 ? this.xVel + xAcc : 0;
-    // this.yVel = Math.abs(yAcc) > 2e-20 ? this.yVel + yAcc : 0;
-    this.xVel += xAcc;
-    this.yVel += yAcc;
-    this.x = Math.min(gScene.bounds.r - SCREEN_WIDTH, Math.max(gScene.bounds.l, this.x + this.xVel * THRUSTER_SPEED));
-    this.y = Math.min(gScene.bounds.b - SCREEN_HEIGHT, Math.max(gScene.bounds.t, this.y + this.yVel * THRUSTER_SPEED));
+
+    var rad = Math.atan2(this.target.y - this.y, this.target.x - this.x);
+    var maxDistance = Math.max(-1 * CAMERA_SPEED, Math.min(CAMERA_SPEED, Math.sqrt(Math.pow(this.target.x - this.x, 2) + Math.pow(this.target.y - this.y, 2))));
+
+    this.x = Math.min(gScene.bounds.r - SCREEN_WIDTH, Math.max(gScene.bounds.l, this.x + (maxDistance * Math.cos(rad))));
+    this.y = Math.min(gScene.bounds.b - SCREEN_HEIGHT, Math.max(gScene.bounds.t, this.y + (maxDistance * Math.sin(rad))));
   }
 }
