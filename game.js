@@ -16,8 +16,8 @@ function init() {
   SCREEN_WIDTH = gRenderer.canvas.width;
   SCREEN_HEIGHT = gRenderer.canvas.height;
 
-  gPlayer.x = (gRenderer.canvas.width / 2) - PLAYER_RADIUS;
-  gPlayer.y = (gRenderer.canvas.height * 0.75) - PLAYER_RADIUS;
+  gPlayer.x = gScene.bounds.l + ((gScene.bounds.r - gScene.bounds.l) / 2);
+  gPlayer.y = gScene.bounds.b - 135;
 
   // Key listeners only seem to work on the document
   document.addEventListener('keydown', handleKeyDown);
