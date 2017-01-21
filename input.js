@@ -20,6 +20,15 @@ gInput = {
   validKey: function(key) { return typeof this[key.toLowerCase()] === 'number' },
   press: function(key) { this[key.toLowerCase()] = 1; },
   release: function(key) { this[key.toLowerCase()] = 0; },
+  releaseAll: function() {
+    this.w = 0;
+    this.s = 0;
+    this.a = 0;
+    this.d = 0;
+    this[' '] = 0;
+    this.mouseL = 0;
+    this.mouseR = 0;
+  },
   mousedown: function(event) {
     if (event.button === 0) this.mouseL = 1;
     else if (event.button === 2) this.mouseR = 1;

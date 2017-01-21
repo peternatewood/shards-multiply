@@ -17,6 +17,7 @@
       }
     },
     change: function(scene) {
+      gInput.releaseAll();
       switch (scene) {
         case 'hangar':
           this.setBounds();
