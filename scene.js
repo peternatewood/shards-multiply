@@ -3,8 +3,8 @@
     scene: 'title',
     level: 0,
     targets: [],
-    titleX: -776,
-    titleY: 128,
+    titleX: -812,
+    titleY: 192,
     title: [],
     selectProg: 0,
     inTransition: false,
@@ -260,13 +260,13 @@
       context.fill();
       context.closePath();
 
-      if (this.titleX < 56) this.titleX += 52;
+      if (this.titleX < 176) this.titleX += 52;
       else {
         context.textAlign = 'center';
         context.strokeStyle = '#FED';
         context.lineWidth = 2;
         context.font = '32px courier';
-        context.strokeText('Click mouse button to start', 400, this.titleY + 260);
+        context.strokeText('Click mouse button to start', SCREEN_WIDTH / 2, this.titleY + 260);
       }
     },
     renderLevelTitle: function() {
