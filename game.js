@@ -19,6 +19,14 @@ function init() {
   gPlayer.x = gScene.bounds.l + ((gScene.bounds.r - gScene.bounds.l) / 2);
   gPlayer.y = gScene.bounds.b - 135;
 
+  var xOff = (gRenderer.canvas.width / 2) - ((LEVELS[0].r - LEVELS[0].l) / 2);
+  var yOff = (gRenderer.canvas.height / 2) - ((LEVELS[0].b - LEVELS[0].t) / 2);
+  LEVELS[0].l += xOff;
+  LEVELS[0].t += yOff;
+  LEVELS[0].r += xOff;
+  LEVELS[0].b += yOff;
+  gScene.setBounds();
+
   // Key listeners only seem to work on the document
   document.addEventListener('keydown', handleKeyDown);
   document.addEventListener('keyup', handleKeyUp);

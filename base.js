@@ -6,7 +6,7 @@ var THRUSTER_SPEED = 8;
 var CAMERA_SPEED = 64;
 var FRICTION = 0.8;
 var LEVELS = [
-  { l: 48, t: 24, r: 752, b: 576 },
+  { l: 0, t: 0, r: 704, b: 552 },
   { l: 0, t: 0, r: 2000, b: 2000 }
 ];
 

@@ -10,7 +10,7 @@
     inTransition: false,
     transitionProg: 0,
     bounds: {
-      l: 48, t: 24, r: 752, b: 576,
+      l: 0, t: 0, r: 704, b: 552,
       collide: function(p) {
         if (p.x - p.size < this.l || p.y - p.size < this.t || p.x + p.size > this.r || p.y + p.size > this.b) return true;
         return false;
@@ -19,11 +19,11 @@
     change: function(scene) {
       switch (scene) {
         case 'hangar':
-          this.targets = [
-            new Target(144, 506),
-            new Target(400, 506)
-          ];
           this.setBounds();
+          this.targets = [
+            new Target(this.bounds.l + 102, this.bounds.t + 485),
+            new Target(this.bounds.l + 362, this.bounds.t + 485)
+          ];
         case 'game':
         case 'levelTitle':
           gInput.rotateCursor = false;
@@ -295,56 +295,56 @@
       if (gScene.scene == 'hangar') {
         // Floor
         context.beginPath();
-        context.moveTo(72, 24);
-        context.lineTo(728, 24);
-        context.lineTo(752, 48);
-        context.lineTo(752, 552);
-        context.lineTo(728, 576);
-        context.lineTo(72, 576);
-        context.lineTo(48, 552);
-        context.lineTo(48, 48);
+        context.moveTo(this.bounds.l + 24, this.bounds.t);
+        context.lineTo(this.bounds.r - 24, this.bounds.t);
+        context.lineTo(this.bounds.r, this.bounds.t + 24);
+        context.lineTo(this.bounds.r, this.bounds.b - 24);
+        context.lineTo(this.bounds.r - 24, this.bounds.b);
+        context.lineTo(this.bounds.l + 24, this.bounds.b);
+        context.lineTo(this.bounds.l, this.bounds.b - 24);
+        context.lineTo(this.bounds.l, this.bounds.t + 24);
         context.closePath();
         context.strokeStyle = '#444';
         context.stroke();
         context.fillStyle = "#777";
         context.fill();
 
-        this.renderCommand('fire', 180, 160);
-        this.renderCommand('up', 398, 160);
-        this.renderCommand('down', 398, 372);
-        this.renderCommand('left', 180, 372);
-        this.renderCommand('right', 616, 372);
+        this.renderCommand('fire', this.bounds.l + 138, this.bounds.t + 136);
+        this.renderCommand('up', this.bounds.l + 356, this.bounds.t + 136);
+        this.renderCommand('down', this.bounds.l + 356, this.bounds.t + 348);
+        this.renderCommand('left', this.bounds.l + 138, this.bounds.t + 348);
+        this.renderCommand('right', this.bounds.l + 574, this.bounds.t + 348);
         // Start square
         if (this.selectProg < 32) {
-          if (gPlayer.x > 544 && gPlayer.x < 688 && gPlayer.y > 64 && gPlayer.y < 208) this.selectProg++;
+          if (gPlayer.x > this.bounds.l + 508 && gPlayer.x < this.bounds.l + 640 && gPlayer.y > this.bounds.t + 46 && gPlayer.y < this.bounds.t + 178) this.selectProg++;
           else if (this.selectProg > 0) this.selectProg = Math.max(0, this.selectProg - 2);
         }
         if (!this.inTransition && this.selectProg == 32) this.transition(1);
-
+        // Selection overlay
         context.beginPath();
-        context.moveTo(682, 64);
-        context.lineTo(688, 70);
-        context.lineTo(688, 70 + (132 * Math.min(1, this.selectProg / 16)));
+        context.moveTo(this.bounds.l + 640, this.bounds.t + 40);
+        context.lineTo(this.bounds.l + 646, this.bounds.t + 46);
+        context.lineTo(this.bounds.l + 646, this.bounds.t + 46 + (132 * Math.min(1, this.selectProg / 16)));
         if (this.selectProg >= 16) {
-          context.lineTo(682, 208);
-          context.lineTo(682 - (132 * Math.min(1, (this.selectProg - 16) / 16)), 208);
-          context.lineTo(544, 70 + (132 * Math.min(1, (this.selectProg - 16) / 16)));
-          context.lineTo(544, 70);
+          context.lineTo(this.bounds.l + 646, this.bounds.t + 184);
+          context.lineTo(this.bounds.l + 640 - (132 * Math.min(1, (this.selectProg - 16) / 16)), this.bounds.t + 184);
+          context.lineTo(this.bounds.l + 502, this.bounds.t + 46 + (132 * Math.min(1, (this.selectProg - 16) / 16)));
+          context.lineTo(this.bounds.l + 502, this.bounds.t + 46);
         }
-        context.lineTo(682 - (132 * Math.min(1, this.selectProg / 16)), 64);
+        context.lineTo(this.bounds.l + 640 - (132 * Math.min(1, this.selectProg / 16)), this.bounds.t + 40);
         context.closePath();
         context.fillStyle = '#4B4';
         context.fill();
-
+        // Start square outline
         context.beginPath();
-        context.moveTo(544, 70);
-        context.lineTo(550, 64);
-        context.lineTo(682, 64);
-        context.lineTo(688, 70);
-        context.lineTo(688, 202);
-        context.lineTo(682, 208);
-        context.lineTo(550, 208);
-        context.lineTo(544, 202);
+        context.moveTo(this.bounds.l + 502, this.bounds.t + 46);
+        context.lineTo(this.bounds.l + 508, this.bounds.t + 40);
+        context.lineTo(this.bounds.l + 640, this.bounds.t + 40);
+        context.lineTo(this.bounds.l + 646, this.bounds.t + 46);
+        context.lineTo(this.bounds.l + 646, this.bounds.t + 178);
+        context.lineTo(this.bounds.l + 640, this.bounds.t + 184);
+        context.lineTo(this.bounds.l + 508, this.bounds.t + 184);
+        context.lineTo(this.bounds.l + 502, this.bounds.t + 178);
         context.closePath();
         context.strokeStyle = '#444';
         context.lineWidth = 6;
@@ -359,22 +359,22 @@
         context.strokeStyle = '#333';
         context.fillStyle = '#000';
         context.lineWidth = 2;
-        context.strokeText('HERE', 616, 112);
-        context.fillText('HERE', 616, 112);
-        context.strokeText('TO', 616, 141);
-        context.fillText('TO', 616, 141);
-        context.strokeText('START', 616, 170);
-        context.fillText('START', 616, 170);
+        context.strokeText('HERE', this.bounds.l + 574, this.bounds.t + 88);
+        context.fillText('HERE', this.bounds.l + 574, this.bounds.t + 88);
+        context.strokeText('TO', this.bounds.l + 574, this.bounds.t + 117);
+        context.fillText('TO', this.bounds.l + 574, this.bounds.t + 117);
+        context.strokeText('START', this.bounds.l + 574, this.bounds.t + 146);
+        context.fillText('START', this.bounds.l + 574, this.bounds.t + 146);
 
         context.beginPath();
-        context.moveTo(108, 476);
-        context.lineTo(116, 468);
-        context.lineTo(684, 468);
-        context.lineTo(692, 476);
-        context.lineTo(692, 534);
-        context.lineTo(684, 542);
-        context.lineTo(116, 542);
-        context.lineTo(108, 534);
+        context.moveTo(this.bounds.l + 66, this.bounds.t + 456);
+        context.lineTo(this.bounds.l + 72, this.bounds.t + 448);
+        context.lineTo(this.bounds.l + 640, this.bounds.t + 448);
+        context.lineTo(this.bounds.l + 646, this.bounds.t + 456);
+        context.lineTo(this.bounds.l + 646, this.bounds.t + 514);
+        context.lineTo(this.bounds.l + 640, this.bounds.t + 522);
+        context.lineTo(this.bounds.l + 72, this.bounds.t + 522);
+        context.lineTo(this.bounds.l + 66, this.bounds.t + 514);
         context.closePath();
         context.strokeStyle = '#444';
         context.lineWidth = 6;
