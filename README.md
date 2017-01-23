@@ -57,4 +57,33 @@ _*not yet implemented_
 
 ## Compile the C Version
 
-To compile the C version of the game, run "make" in the terminal on Linux or Apple OSX computers, or use your favorite IDE on Windows.
+The C version runs locally without any need for an internet connection, just like any old game. You'll need to [get SDL2 here](https://www.libsdl.org/download-2.0.php), but which package you download and how you use it will depend on your operating system of choice.
+### OSX
+You have two options in OSX: XCode and the command line. For both, you can download the .framework package and add it to `/Library/Frameworks`. If you know how to use XCode, just go ahead and compile from there.
+
+If you prefer the command line like me, and avoid using XCode whenever possible, here's a simple Makefile to handle all the grunt work:
+```
+COMPILER = gcc
+COMPILER_FLAGS = --std=c99 -w -Wall
+LINKER_FLAGS = -framework SDL2
+TARGET = shards
+
+all: $(TARGET).c
+	$(COMPILER) $(TARGET).c $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(TARGET)
+```
+### Ubuntu, Debian-based systems
+Maybe the easiest option, all you need for Debian is to `apt-get install libsdl2-2.0` (the latest version at the time of writing). The SDL Wiki provides a more thorough walkthrough for [Linux and Unix systems here](https://wiki.libsdl.org/Installation#Linux.2FUnix).<br/>
+
+Your Makefile will look much like the OSX one, except for the linker flags:
+```
+COMPILER = gcc
+COMPILER_FLAGS = --std=c99 -w -Wall
+LINKER_FLAGS = -lSDL2
+TARGET = shards
+
+all: $(TARGET).c
+	$(COMPILER) $(TARGET).c $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(TARGET)
+
+```
+### Windows
+Coming soon? Windows makes this so hard...
