@@ -32,6 +32,8 @@ int main() {
       SDL_Renderer* gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
       if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
       else {
+        SDL_Rect playerRect = { x: 100, y: 100, w: 40, h: 40 };
+
         while (isRunning) {
           SDL_RenderClear(gRenderer);
           while (SDL_PollEvent(&event) != 0) {
@@ -39,8 +41,13 @@ int main() {
               isRunning = false;
             }
           }
+          // Background color
           SDL_SetRenderDrawColor(gRenderer, 44, 98, 178, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(gRenderer, NULL);
+
+          // Player rect
+          SDL_SetRenderDrawColor(gRenderer, PALETTE[1][0], PALETTE[1][1], PALETTE[1][2], PALETTE[1][1]);
+          SDL_RenderFillRect(gRenderer, &playerRect);
 
           SDL_RenderPresent(gRenderer);
         }
