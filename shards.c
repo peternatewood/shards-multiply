@@ -5,6 +5,18 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
+const int PALETTE[8][4] = {
+  { 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE },
+  { 0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE },
+  { 0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+};
+
 int main() {
   bool isRunning = true;
   SDL_Event event;
