@@ -54,3 +54,7 @@ Primary Mouse Button (left on most mice, right on left-handed mice) - fire plasm
 Secondary Mouse Button* - fire loaded secondary weapon (ammunition-based)
 
 _*not yet implemented_
+
+## Compile the C Version
+
+To compile the C version of the game, run "make" in the terminal on Linux or Apple OSX computers, or use your favorite IDE on Windows.
