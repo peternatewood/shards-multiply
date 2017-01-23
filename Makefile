@@ -1,0 +1,7 @@
+COMPILER = gcc
+COMPILER_FLAGS = --std=c99 -w -Wall
+LINKER_FLAGS = -lSDL2 -lSDL2_image
+TARGET = shards
+
+all: $(TARGET).c
+	$(COMPILER) $(TARGET).c $(COMPILER_FLAGS) $(LINKER_FLAGS) -o $(TARGET)
