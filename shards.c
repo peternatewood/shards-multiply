@@ -17,6 +17,13 @@ const int PALETTE[8][4] = {
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
 };
 
+struct Timer {
+  int startTicks;
+  int pausedTicks;
+  bool isStarted;
+  bool isPaused;
+};
+
 int main() {
   bool isRunning = true;
   SDL_Event event;
@@ -32,6 +39,7 @@ int main() {
       SDL_Renderer* gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
       if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
       else {
+        struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
         SDL_Rect playerRect = { x: 100, y: 100, w: 40, h: 40 };
 
         while (isRunning) {
