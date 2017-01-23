@@ -20,7 +20,6 @@ int main() {
       SDL_Renderer* gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
       if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
       else {
-        SDL_Rect gViewport = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
         while (isRunning) {
           SDL_RenderClear(gRenderer);
           while (SDL_PollEvent(&event) != 0) {
@@ -29,7 +28,7 @@ int main() {
             }
           }
           SDL_SetRenderDrawColor(gRenderer, 44, 98, 178, SDL_ALPHA_OPAQUE);
-          SDL_RenderFillRect(gRenderer, &gViewport);
+          SDL_RenderFillRect(gRenderer, NULL);
 
           SDL_RenderPresent(gRenderer);
         }
