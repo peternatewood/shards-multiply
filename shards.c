@@ -60,7 +60,6 @@ int main() {
         int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
         struct Actor player = { 100, 100, 20, 0, 0 };
-        SDL_Rect playerRect = { x: player.x, y: player.y, w: player.r, h: player.r };
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
@@ -76,7 +75,6 @@ int main() {
                 case SDLK_LEFT:   player.xAcc -= 1; break;
                 case SDLK_RIGHT:  player.xAcc += 1; break;
               }
-              // printf("Keydown event %d, yAcc: %d\n, player.y %d\n", event.key.keysym.sym, player.yAcc);
             }
             else if (event.type == SDL_KEYUP) {
               switch (event.key.keysym.sym) {
@@ -85,11 +83,8 @@ int main() {
                 case SDLK_LEFT:   player.xAcc += 1; break;
                 case SDLK_RIGHT:  player.xAcc -= 1; break;
               }
-              // printf("Keyup event %d, yAcc: %d\n, player.y %d\n", event.key.keysym.sym, player.yAcc);
             }
           }
-          // playerRect.y += player.yAcc;
-          // playerRect.x += player.xAcc;
           player.y += player.yAcc;
           player.x += player.xAcc;
 
