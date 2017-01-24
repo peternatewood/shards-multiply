@@ -13,8 +13,7 @@ const int PALETTE[8][4] = {
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 44, 98, 178, SDL_ALPHA_OPAQUE }
 };
 
 struct Timer {
