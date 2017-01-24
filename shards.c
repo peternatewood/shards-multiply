@@ -64,11 +64,25 @@ struct Timer {
   bool isPaused;
 };
 
+const double FRICTION = 0.6;
+const unsigned short PLAYER_SPEED = 4;
 struct Actor {
   int x, y;
+  float xVel, yVel;
   double r;
   short xAcc, yAcc;
 };
+
+void moveActor(struct Actor *actor) {
+  actor->xVel = (actor->xVel * FRICTION) + actor->xAcc;
+  actor->yVel = (actor->yVel * FRICTION) + actor->yAcc;
+
+  if ((actor->xVel > 0 && actor->xVel < 0.1) || (actor->xVel < 0 && actor->xVel > -0.1)) actor->xVel = 0;
+  if ((actor->yVel > 0 && actor->yVel < 0.1) || (actor->yVel < 0 && actor->yVel > -0.1)) actor->yVel = 0;
+
+  actor->x += actor->xVel * PLAYER_SPEED;
+  actor->y += actor->yVel * PLAYER_SPEED;
+}
 
 void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
   int x, y;
@@ -104,7 +118,7 @@ int main() {
         int frames = 0;
         int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
-        struct Actor player = { 100, 100, 20, 0, 0 };
+        struct Actor player = { 100, 100, 0, 0, 0, 0, 0 };
         SDL_Point mouse = { 0, 0 };
 
         while (isRunning) {
@@ -135,8 +149,7 @@ int main() {
               mouse.y = event.motion.y;
             }
           }
-          player.y += player.yAcc;
-          player.x += player.xAcc;
+          moveActor(&player);
           player.r = atan2(mouse.y - player.y, mouse.x - player.x);
 
           // Background color
