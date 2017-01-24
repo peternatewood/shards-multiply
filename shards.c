@@ -9,11 +9,11 @@ const int WINDOW_HEIGHT = 600;
 const float TICKS_PER_FRAME = 1000 / 60;
 
 const int PALETTE[32] = {
-  0x00, 0x00, 0x00, 0x00,
   0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE,
   0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE,
   0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE,
   0xB3, 0x63, 0x2E, SDL_ALPHA_OPAQUE,
+  44, 98, 178, SDL_ALPHA_OPAQUE,
   44, 98, 178, SDL_ALPHA_OPAQUE,
   44, 98, 178, SDL_ALPHA_OPAQUE,
   44, 98, 178, SDL_ALPHA_OPAQUE
@@ -90,14 +90,16 @@ void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
   int actX = actor.x - (SPRITE_SIZE / 2);
   int actY = actor.y - (SPRITE_SIZE / 2);
 
-  for (int i = start; i < start + SPRITE_LENGTH; i++) {
-    x = (i % SPRITE_SIZE) - (SPRITE_SIZE / 2);
-    y = (i / SPRITE_SIZE) - (SPRITE_SIZE / 2);
-    if (i == start || SPRITES[i] != SPRITES[i - 1]) {
-      int index = SPRITES[i] * 4;
-      SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 3]);
+  for (unsigned int i = start; i < start + SPRITE_LENGTH; i++) {
+    if (SPRITES[i] > 0) {
+      x = (i % SPRITE_SIZE) - (SPRITE_SIZE / 2);
+      y = (i / SPRITE_SIZE) - (SPRITE_SIZE / 2);
+      if (i == start || SPRITES[i] != SPRITES[i - 1]) {
+        int index = (SPRITES[i] - 1) * 4;
+        SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 3]);
+      }
+      SDL_RenderDrawPoint(renderer, actX + ((x * cos(actor.r)) - (y * sin(actor.r))), actY + ((y * cos(actor.r)) + (x * sin(actor.r))));
     }
-    SDL_RenderDrawPoint(renderer, actX + ((x * cos(actor.r)) - (y * sin(actor.r))), actY + ((y * cos(actor.r)) + (x * sin(actor.r))));
   }
 }
 
