@@ -8,7 +8,7 @@ const int WINDOW_HEIGHT = 600;
 const float TICKS_PER_FRAME = 1000 / 60;
 
 const int PALETTE[32] = {
-  0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE,
+  0x00, 0x00, 0x00, 0x00,
   0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE,
   0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE,
   0xB3, 0x63, 0x2E, SDL_ALPHA_OPAQUE,
@@ -20,14 +20,14 @@ const int PALETTE[32] = {
 
 const int SPRITE_SIZE = 64;
 const int SPRITES[SPRITE_SIZE * 2] = {
+  0,0,0,1,1,0,0,0,
+  0,0,0,1,1,0,0,0,
+  0,0,1,1,1,1,0,0,
+  0,1,1,1,1,1,1,0,
   1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,
+  1,1,1,0,0,1,1,1,
+  1,1,0,0,0,0,1,1,
 
   3,3,3,3,3,3,3,3,
   3,3,3,3,3,3,3,3,
@@ -74,6 +74,7 @@ int main() {
     else {
       SDL_Renderer* gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
       if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
+      else if (SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND) < 0) printf("Failed to set render draw blend mode! SDL Error: %s\n", SDL_GetError());
       else {
         int frames = 0;
         int frameTicks = 0;
