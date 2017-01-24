@@ -11,14 +11,15 @@ const int PALETTE[8][4] = {
   { 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE },
   { 0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE },
   { 0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE },
+  { 0xB3, 0x63, 0x2E, SDL_ALPHA_OPAQUE },
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
   { 44, 98, 178, SDL_ALPHA_OPAQUE },
   { 44, 98, 178, SDL_ALPHA_OPAQUE }
 };
 
-const int sprite[64] = {
+const int SPRITE_SIZE = 64;
+const int SPRITES[SPRITE_SIZE * 2] = {
   1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,
@@ -26,7 +27,16 @@ const int sprite[64] = {
   1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,
   1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1
+  1,1,1,1,1,1,1,1,
+
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3,
+  3,3,3,3,3,3,3,3
 };
 
 struct Timer {
@@ -40,6 +50,16 @@ struct Actor {
   int x, y, r;
   short xAcc, yAcc;
 };
+
+void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
+  int start = spriteNumber * SPRITE_SIZE;
+  for (int i = start; i < start + SPRITE_SIZE; i++) {
+    if (i == start || SPRITES[i] != SPRITES[i - 1]) {
+      SDL_SetRenderDrawColor(renderer, PALETTE[SPRITES[i]][0], PALETTE[SPRITES[i]][1], PALETTE[SPRITES[i]][2], PALETTE[SPRITES[i]][1]);
+    }
+    SDL_RenderDrawPoint(renderer, actor.x + (i % 8), actor.y + (i / 8));
+  }
+}
 
 int main() {
   bool isRunning = true;
@@ -93,12 +113,7 @@ int main() {
           SDL_RenderFillRect(gRenderer, NULL);
 
           // Player sprite
-          for (int i = 0; i < 64; i++) {
-            if (i == 0 || sprite[i] != sprite[i - 1]) {
-              SDL_SetRenderDrawColor(gRenderer, PALETTE[sprite[i]][0], PALETTE[sprite[i]][1], PALETTE[sprite[i]][2], PALETTE[sprite[i]][1]);
-            }
-            SDL_RenderDrawPoint(gRenderer, player.x + (i % 8), player.y + (i / 8));
-          }
+          renderSprite(gRenderer, player, 0);
 
           SDL_RenderPresent(gRenderer);
 
