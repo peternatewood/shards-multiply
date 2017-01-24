@@ -5,6 +5,8 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
+const float TICKS_PER_FRAME = 1000 / 60;
+
 const int PALETTE[8][4] = {
   { 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE },
   { 0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE },
@@ -43,6 +45,8 @@ int main() {
       SDL_Renderer* gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
       if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
       else {
+        int frames = 0;
+        int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
         struct Actor player = { 100, 100, 20, 0, 0 };
         SDL_Rect playerRect = { x: player.x, y: player.y, w: player.r, h: player.r };
@@ -85,6 +89,10 @@ int main() {
           SDL_RenderFillRect(gRenderer, &playerRect);
 
           SDL_RenderPresent(gRenderer);
+
+          frameTicks = frames / (SDL_GetTicks() - frameTimer.startTicks);
+          if (frameTicks < TICKS_PER_FRAME) SDL_Delay(TICKS_PER_FRAME - frameTicks);
+          frames++;
         }
         SDL_DestroyRenderer(gRenderer);
         gRenderer = NULL;
