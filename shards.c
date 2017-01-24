@@ -94,7 +94,9 @@ int main() {
 
           // Player sprite
           for (int i = 0; i < 64; i++) {
-            SDL_SetRenderDrawColor(gRenderer, PALETTE[sprite[i]][0], PALETTE[sprite[i]][1], PALETTE[sprite[i]][2], PALETTE[sprite[i]][1]);
+            if (i == 0 || sprite[i] != sprite[i - 1]) {
+              SDL_SetRenderDrawColor(gRenderer, PALETTE[sprite[i]][0], PALETTE[sprite[i]][1], PALETTE[sprite[i]][2], PALETTE[sprite[i]][1]);
+            }
             SDL_RenderDrawPoint(gRenderer, player.x + (i % 8), player.y + (i / 8));
           }
 
