@@ -18,6 +18,17 @@ const int PALETTE[8][4] = {
   { 44, 98, 178, SDL_ALPHA_OPAQUE }
 };
 
+const int sprite[64] = {
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1,
+  1,1,1,1,1,1,1,1
+};
+
 struct Timer {
   int startTicks;
   int pausedTicks;
@@ -77,16 +88,20 @@ int main() {
               // printf("Keyup event %d, yAcc: %d\n, player.y %d\n", event.key.keysym.sym, player.yAcc);
             }
           }
-          playerRect.y += player.yAcc;
-          playerRect.x += player.xAcc;
+          // playerRect.y += player.yAcc;
+          // playerRect.x += player.xAcc;
+          player.y += player.yAcc;
+          player.x += player.xAcc;
 
           // Background color
           SDL_SetRenderDrawColor(gRenderer, 44, 98, 178, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(gRenderer, NULL);
 
-          // Player rect
-          SDL_SetRenderDrawColor(gRenderer, PALETTE[1][0], PALETTE[1][1], PALETTE[1][2], PALETTE[1][1]);
-          SDL_RenderFillRect(gRenderer, &playerRect);
+          // Player sprite
+          for (int i = 0; i < 64; i++) {
+            SDL_SetRenderDrawColor(gRenderer, PALETTE[sprite[i]][0], PALETTE[sprite[i]][1], PALETTE[sprite[i]][2], PALETTE[sprite[i]][1]);
+            SDL_RenderDrawPoint(gRenderer, player.x + (i % 8), player.y + (i / 8));
+          }
 
           SDL_RenderPresent(gRenderer);
 
