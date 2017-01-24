@@ -7,15 +7,15 @@ const int WINDOW_HEIGHT = 600;
 
 const float TICKS_PER_FRAME = 1000 / 60;
 
-const int PALETTE[8][4] = {
-  { 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE },
-  { 0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE },
-  { 0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE },
-  { 0xB3, 0x63, 0x2E, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE },
-  { 44, 98, 178, SDL_ALPHA_OPAQUE }
+const int PALETTE[32] = {
+  0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE,
+  0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE,
+  0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE,
+  0xB3, 0x63, 0x2E, SDL_ALPHA_OPAQUE,
+  44, 98, 178, SDL_ALPHA_OPAQUE,
+  44, 98, 178, SDL_ALPHA_OPAQUE,
+  44, 98, 178, SDL_ALPHA_OPAQUE,
+  44, 98, 178, SDL_ALPHA_OPAQUE
 };
 
 const int SPRITE_SIZE = 64;
@@ -55,7 +55,8 @@ void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
   int start = spriteNumber * SPRITE_SIZE;
   for (int i = start; i < start + SPRITE_SIZE; i++) {
     if (i == start || SPRITES[i] != SPRITES[i - 1]) {
-      SDL_SetRenderDrawColor(renderer, PALETTE[SPRITES[i]][0], PALETTE[SPRITES[i]][1], PALETTE[SPRITES[i]][2], PALETTE[SPRITES[i]][1]);
+      int index = SPRITES[i] * 4;
+      SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 1]);
     }
     SDL_RenderDrawPoint(renderer, actor.x + (i % 8), actor.y + (i / 8));
   }
@@ -65,9 +66,7 @@ int main() {
   bool isRunning = true;
   SDL_Event event;
 
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-    printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-  }
+  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
   else {
     SDL_Window* gWindow = SDL_CreateWindow("Shards", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
