@@ -9,10 +9,10 @@ const float TICKS_PER_FRAME = 1000 / 60;
 
 const int PALETTE[32] = {
   0x00, 0x00, 0x00, 0x00,
+  0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE,
   0xEE, 0xEE, 0xEE, SDL_ALPHA_OPAQUE,
   0x2E, 0x63, 0xB3, SDL_ALPHA_OPAQUE,
   0xB3, 0x63, 0x2E, SDL_ALPHA_OPAQUE,
-  44, 98, 178, SDL_ALPHA_OPAQUE,
   44, 98, 178, SDL_ALPHA_OPAQUE,
   44, 98, 178, SDL_ALPHA_OPAQUE,
   44, 98, 178, SDL_ALPHA_OPAQUE
@@ -21,22 +21,22 @@ const int PALETTE[32] = {
 const int SPRITE_SIZE = 16;
 const int SPRITE_LENGTH = SPRITE_SIZE * SPRITE_SIZE;
 const int SPRITES[SPRITE_LENGTH * 2] = {
-  0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,
-  0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,
-  0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,
-  0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-  1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
-  1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,
-  0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,
-  0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0,
-  0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0,
-  0,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-  1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-  1,1,1,0,0,1,1,1,1,1,1,0,0,1,1,1,
-  1,1,0,0,0,0,1,1,1,1,0,0,0,0,1,1,
+  0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,4,3,3,4,0,0,0,0,0,0,
+  0,0,0,0,0,0,4,3,3,4,0,0,0,0,0,0,
+  0,0,0,0,0,4,3,3,3,3,4,0,0,0,0,0,
+  0,0,0,0,0,4,3,3,3,3,4,0,0,0,0,0,
+  0,0,4,4,4,3,3,3,3,3,3,4,4,4,0,0,
+  4,4,3,3,3,3,3,3,3,3,3,3,3,3,4,4,
+  4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,
+  4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,
+  0,4,3,3,3,3,3,3,3,3,3,3,3,3,4,0,
+  0,4,3,3,3,3,3,3,3,3,3,3,3,3,4,0,
+  0,4,3,3,3,3,3,3,3,3,3,3,3,3,4,0,
+  0,0,4,3,3,3,4,4,4,4,3,3,3,4,0,0,
+  0,0,4,4,4,4,0,0,0,0,4,4,4,4,0,0,
+  0,0,4,0,0,0,0,0,0,0,0,0,0,4,0,0,
 
   3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
   3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -73,7 +73,7 @@ void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
   for (int i = start; i < start + SPRITE_LENGTH; i++) {
     if (i == start || SPRITES[i] != SPRITES[i - 1]) {
       int index = SPRITES[i] * 4;
-      SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 1]);
+      SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 3]);
     }
     SDL_RenderDrawPoint(renderer, actor.x + (i % SPRITE_SIZE), actor.y + (i / SPRITE_SIZE));
   }
@@ -126,7 +126,7 @@ int main() {
           player.x += player.xAcc;
 
           // Background color
-          SDL_SetRenderDrawColor(gRenderer, 44, 98, 178, SDL_ALPHA_OPAQUE);
+          SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(gRenderer, NULL);
 
           // Player sprite
