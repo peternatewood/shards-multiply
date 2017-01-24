@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -21,22 +22,22 @@ const int PALETTE[32] = {
 const int SPRITE_SIZE = 16;
 const int SPRITE_LENGTH = SPRITE_SIZE * SPRITE_SIZE;
 const int SPRITES[SPRITE_LENGTH * 2] = {
-  0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,4,4,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,4,3,3,4,0,0,0,0,0,0,
-  0,0,0,0,0,0,4,3,3,4,0,0,0,0,0,0,
-  0,0,0,0,0,4,3,3,3,3,4,0,0,0,0,0,
-  0,0,0,0,0,4,3,3,3,3,4,0,0,0,0,0,
-  0,0,4,4,4,3,3,3,3,3,3,4,4,4,0,0,
-  4,4,3,3,3,3,3,3,3,3,3,3,3,3,4,4,
-  4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,
-  4,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,
-  0,4,3,3,3,3,3,3,3,3,3,3,3,3,4,0,
-  0,4,3,3,3,3,3,3,3,3,3,3,3,3,4,0,
-  0,4,3,3,3,3,3,3,3,3,3,3,3,3,4,0,
-  0,0,4,3,3,3,4,4,4,4,3,3,3,4,0,0,
-  0,0,4,4,4,4,0,0,0,0,4,4,4,4,0,0,
-  0,0,4,0,0,0,0,0,0,0,0,0,0,4,0,0,
+  0,0,0,0,0,0,4,4,4,0,0,0,0,0,0,0,
+  0,0,0,4,4,4,3,3,4,0,0,0,0,0,0,0,
+  4,4,4,3,3,3,3,3,3,4,0,0,0,0,0,0,
+  0,4,3,3,3,3,3,3,3,4,0,0,0,0,0,0,
+  0,4,3,3,3,3,3,3,3,4,0,0,0,0,0,0,
+  0,4,3,3,3,3,3,3,3,3,4,4,0,0,0,0,
+  0,0,4,3,3,3,3,3,3,3,3,3,4,4,0,0,
+  0,0,4,3,3,3,3,3,3,3,3,3,3,3,4,4,
+  0,0,4,3,3,3,3,3,3,3,3,3,3,3,4,4,
+  0,0,4,3,3,3,3,3,3,3,3,3,4,4,0,0,
+  0,4,3,3,3,3,3,3,3,3,4,4,0,0,0,0,
+  0,4,3,3,3,3,3,3,3,4,0,0,0,0,0,0,
+  0,4,3,3,3,3,3,3,3,4,0,0,0,0,0,0,
+  4,4,4,3,3,3,3,3,3,4,0,0,0,0,0,0,
+  0,0,0,4,4,4,3,3,4,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,4,4,4,0,0,0,0,0,0,0,
 
   3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
   3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
@@ -64,18 +65,25 @@ struct Timer {
 };
 
 struct Actor {
-  int x, y, r;
+  int x, y;
+  double r;
   short xAcc, yAcc;
 };
 
 void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
+  int x, y;
   int start = spriteNumber * SPRITE_LENGTH;
+  int actX = actor.x - (SPRITE_SIZE / 2);
+  int actY = actor.y - (SPRITE_SIZE / 2);
+
   for (int i = start; i < start + SPRITE_LENGTH; i++) {
+    x = (i % SPRITE_SIZE) - (SPRITE_SIZE / 2);
+    y = (i / SPRITE_SIZE) - (SPRITE_SIZE / 2);
     if (i == start || SPRITES[i] != SPRITES[i - 1]) {
       int index = SPRITES[i] * 4;
       SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 3]);
     }
-    SDL_RenderDrawPoint(renderer, actor.x + (i % SPRITE_SIZE), actor.y + (i / SPRITE_SIZE));
+    SDL_RenderDrawPoint(renderer, actX + ((x * cos(actor.r)) - (y * sin(actor.r))), actY + ((y * cos(actor.r)) + (x * sin(actor.r))));
   }
 }
 
@@ -97,6 +105,7 @@ int main() {
         int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
         struct Actor player = { 100, 100, 20, 0, 0 };
+        SDL_Point mouse = { 0, 0 };
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
@@ -121,9 +130,14 @@ int main() {
                 case SDLK_RIGHT:  player.xAcc -= 1; break;
               }
             }
+            else if (event.type == SDL_MOUSEMOTION) {
+              mouse.x = event.motion.x;
+              mouse.y = event.motion.y;
+            }
           }
           player.y += player.yAcc;
           player.x += player.xAcc;
+          player.r = atan2(mouse.y - player.y, mouse.x - player.x);
 
           // Background color
           SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
