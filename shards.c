@@ -23,6 +23,11 @@ struct Timer {
   bool isPaused;
 };
 
+struct Actor {
+  int x, y, r;
+  short xAcc, yAcc;
+};
+
 int main() {
   bool isRunning = true;
   SDL_Event event;
@@ -39,7 +44,8 @@ int main() {
       if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
       else {
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
-        SDL_Rect playerRect = { x: 100, y: 100, w: 40, h: 40 };
+        struct Actor player = { 100, 100, 20, 0, 0 };
+        SDL_Rect playerRect = { x: player.x, y: player.y, w: player.r, h: player.r };
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
