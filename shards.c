@@ -49,11 +49,33 @@ int main() {
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
+
           while (SDL_PollEvent(&event) != 0) {
             if (event.type == SDL_QUIT) {
               isRunning = false;
             }
+            else if (!event.key.repeat && event.type == SDL_KEYDOWN) {
+              switch (event.key.keysym.sym) {
+                case SDLK_UP:     player.yAcc -= 1; break;
+                case SDLK_DOWN:   player.yAcc += 1; break;
+                case SDLK_LEFT:   player.xAcc -= 1; break;
+                case SDLK_RIGHT:  player.xAcc += 1; break;
+              }
+              // printf("Keydown event %d, yAcc: %d\n, player.y %d\n", event.key.keysym.sym, player.yAcc);
+            }
+            else if (event.type == SDL_KEYUP) {
+              switch (event.key.keysym.sym) {
+                case SDLK_UP:     player.yAcc += 1; break;
+                case SDLK_DOWN:   player.yAcc -= 1; break;
+                case SDLK_LEFT:   player.xAcc += 1; break;
+                case SDLK_RIGHT:  player.xAcc -= 1; break;
+              }
+              // printf("Keyup event %d, yAcc: %d\n, player.y %d\n", event.key.keysym.sym, player.yAcc);
+            }
           }
+          playerRect.y += player.yAcc;
+          playerRect.x += player.xAcc;
+
           // Background color
           SDL_SetRenderDrawColor(gRenderer, 44, 98, 178, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(gRenderer, NULL);
