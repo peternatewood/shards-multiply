@@ -74,6 +74,10 @@ struct Actor {
   short xAcc, yAcc;
 };
 
+void setPaletteColor(int *renderer, int paletteNumber) {
+  SDL_SetRenderDrawColor(renderer, PALETTE[paletteNumber], PALETTE[paletteNumber + 1], PALETTE[paletteNumber + 2], PALETTE[paletteNumber + 3]);
+}
+
 void moveActor(struct Actor *actor) {
   actor->xVel = (actor->xVel * FRICTION) + actor->xAcc;
   actor->yVel = (actor->yVel * FRICTION) + actor->yAcc;
@@ -96,8 +100,7 @@ void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
       x = (i % SPRITE_SIZE) - (SPRITE_SIZE / 2);
       y = (i / SPRITE_SIZE) - (SPRITE_SIZE / 2);
       if (i == start || SPRITES[i] != SPRITES[i - 1]) {
-        int index = (SPRITES[i] - 1) * 4;
-        SDL_SetRenderDrawColor(renderer, PALETTE[index], PALETTE[index + 1], PALETTE[index + 2], PALETTE[index + 3]);
+        setPaletteColor(renderer, (SPRITES[i] - 1) * 4);
       }
       SDL_RenderDrawPoint(renderer, actX + ((x * cos(actor.r)) - (y * sin(actor.r))), actY + ((y * cos(actor.r)) + (x * sin(actor.r))));
     }
