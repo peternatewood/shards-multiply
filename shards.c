@@ -19,8 +19,9 @@ const int PALETTE[32] = {
   44, 98, 178, SDL_ALPHA_OPAQUE
 };
 
-const int SPRITE_SIZE = 16;
-const int SPRITE_LENGTH = SPRITE_SIZE * SPRITE_SIZE;
+#define SPRITE_SIZE 16
+#define SPRITE_LENGTH (SPRITE_SIZE * SPRITE_SIZE)
+
 const int SPRITES[SPRITE_LENGTH * 2] = {
   0,0,0,0,0,0,4,4,4,0,0,0,0,0,0,0,
   0,0,0,4,4,4,3,3,4,0,0,0,0,0,0,0,
