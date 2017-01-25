@@ -103,7 +103,7 @@ struct Timer {
 };
 
 struct Actor {
-  int x, y;
+  int x, y, life;
   double r;
   float xVel, yVel, xAcc, yAcc;
 };
@@ -157,6 +157,7 @@ void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
 void fireBolt(struct Actor actor, struct Actor projectiles[], unsigned int index) {
   projectiles[index].x = actor.x;
   projectiles[index].y = actor.y;
+  projectiles[index].life = 50;
   projectiles[index].r = actor.r;
   projectiles[index].xVel = 0;
   projectiles[index].yVel = 0;
@@ -181,11 +182,14 @@ int main() {
         int frames = 0;
         int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
-        struct Actor player = { 100, 100, 0, 0, 0, 0, 0 };
-        bool shouldFireBolts = false;
+        struct Actor player = { 100, 100, 100, 0, 0, 0, 0, 0 };
         SDL_Point mouse = { 0, 0 };
         SDL_Point tilePoint = { SPRITE_SIZE, 0 };
+
+        bool shouldFireBolts = false;
         struct Actor projectiles[10];
+        int boltIndex = 0;
+        int fireDelay = 0;
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
@@ -227,7 +231,12 @@ int main() {
               mouse.y = event.motion.y;
             }
           }
-          if (shouldFireBolts) fireBolt(player, &projectiles, 0);
+          if (shouldFireBolts && fireDelay == 0) {
+            fireBolt(player, &projectiles, boltIndex);
+            boltIndex = (boltIndex + 1) % 10;
+            fireDelay = 6;
+          }
+          else if (fireDelay > 0) fireDelay--;
 
           moveActor(&player);
           player.r = atan2(mouse.y - player.y, mouse.x - player.x);
@@ -239,9 +248,10 @@ int main() {
           renderSprite(gRenderer, tilePoint, 1);
 
           for (unsigned int i = 0; i < 10; i++) {
-            if (&projectiles[i] != NULL) {
+            if (&projectiles[i] != NULL && projectiles[i].life > 0) {
               moveActor(&projectiles[i]);
               renderActor(gRenderer, projectiles[i], 2);
+              projectiles[i].life--;
             }
           }
 
