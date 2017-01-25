@@ -78,6 +78,19 @@ void setPaletteColor(int *renderer, int paletteNumber) {
   SDL_SetRenderDrawColor(renderer, PALETTE[paletteNumber], PALETTE[paletteNumber + 1], PALETTE[paletteNumber + 2], PALETTE[paletteNumber + 3]);
 }
 
+void renderSprite(int *renderer, SDL_Point pos, int spriteNumber) {
+  int start = spriteNumber * SPRITE_LENGTH;
+
+  for (unsigned int i = start; i < start + SPRITE_LENGTH; i++) {
+    if (SPRITES[i] > 0) {
+      if (i == start || SPRITES[i] != SPRITES[i - 1]) {
+        setPaletteColor(renderer, (SPRITES[i] - 1) * 4);
+      }
+      SDL_RenderDrawPoint(renderer, pos.x + ((i - start) % SPRITE_SIZE), pos.y + ((i - start) / SPRITE_SIZE));
+    }
+  }
+}
+
 void moveActor(struct Actor *actor) {
   actor->xVel = (actor->xVel * FRICTION) + actor->xAcc;
   actor->yVel = (actor->yVel * FRICTION) + actor->yAcc;
@@ -126,6 +139,7 @@ int main() {
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
         struct Actor player = { 100, 100, 0, 0, 0, 0, 0 };
         SDL_Point mouse = { 0, 0 };
+        SDL_Point tilePoint = { SPRITE_SIZE, 0 };
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
@@ -161,6 +175,8 @@ int main() {
           // Background color
           SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(gRenderer, NULL);
+
+          renderSprite(gRenderer, tilePoint, 1);
 
           // Player sprite
           renderActor(gRenderer, player, 0);
