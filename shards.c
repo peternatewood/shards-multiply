@@ -229,6 +229,13 @@ int main() {
 
           renderSprite(gRenderer, tilePoint, 1);
 
+          for (unsigned int i = 0; i < 10; i++) {
+            if (&projectiles[i] != NULL) {
+              moveActor(&projectiles[i]);
+              renderActor(gRenderer, projectiles[i], 2);
+            }
+          }
+
           // Player sprite
           renderActor(gRenderer, player, 0);
 
