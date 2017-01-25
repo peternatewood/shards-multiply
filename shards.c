@@ -85,7 +85,7 @@ void moveActor(struct Actor *actor) {
   actor->y += actor->yVel * PLAYER_SPEED;
 }
 
-void renderSprite(int *renderer, struct Actor actor, int spriteNumber) {
+void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
   int x, y;
   int start = spriteNumber * SPRITE_LENGTH;
   int actX = actor.x - (SPRITE_SIZE / 2);
@@ -160,7 +160,7 @@ int main() {
           SDL_RenderFillRect(gRenderer, NULL);
 
           // Player sprite
-          renderSprite(gRenderer, player, 0);
+          renderActor(gRenderer, player, 0);
 
           SDL_RenderPresent(gRenderer);
 
