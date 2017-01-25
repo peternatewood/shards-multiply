@@ -6,7 +6,13 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
-const float TICKS_PER_FRAME = 1000 / 60;
+#define TICKS_PER_FRAME 1000.f / 60.f
+
+#define SPRITE_SIZE 16
+#define SPRITE_LENGTH (SPRITE_SIZE * SPRITE_SIZE)
+
+float FRICTION = 0.6;
+unsigned int PLAYER_SPEED = 4;
 
 const int PALETTE[32] = {
   0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE,
@@ -18,9 +24,6 @@ const int PALETTE[32] = {
   0xFF, 0x00, 0x17, SDL_ALPHA_OPAQUE,
   0x00, 0xFF, 0x17, SDL_ALPHA_OPAQUE
 };
-
-#define SPRITE_SIZE 16
-#define SPRITE_LENGTH (SPRITE_SIZE * SPRITE_SIZE)
 
 const int SPRITES[SPRITE_LENGTH * 4] = {
   0,0,0,0,0,0,4,4,4,0,0,0,0,0,0,0,
@@ -99,8 +102,6 @@ struct Timer {
   bool isPaused;
 };
 
-const double FRICTION = 0.6;
-const unsigned short PLAYER_SPEED = 4;
 struct Actor {
   int x, y;
   double r;
@@ -181,6 +182,7 @@ int main() {
         int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
         struct Actor player = { 100, 100, 0, 0, 0, 0, 0 };
+        bool shouldFireBolts = false;
         SDL_Point mouse = { 0, 0 };
         SDL_Point tilePoint = { SPRITE_SIZE, 0 };
         struct Actor projectiles[10];
@@ -210,8 +212,13 @@ int main() {
             }
             else if (event.type == SDL_MOUSEBUTTONDOWN) {
               switch (event.button.button) {
-                case SDL_BUTTON_LEFT:
-                  fireBolt(player, &projectiles, 0);
+                case SDL_BUTTON_LEFT: shouldFireBolts = true;
+                  break;
+              }
+            }
+            else if (event.type == SDL_MOUSEBUTTONUP) {
+              switch (event.button.button) {
+                case SDL_BUTTON_LEFT: shouldFireBolts = false;
                   break;
               }
             }
@@ -220,6 +227,8 @@ int main() {
               mouse.y = event.motion.y;
             }
           }
+          if (shouldFireBolts) fireBolt(player, &projectiles, 0);
+
           moveActor(&player);
           player.r = atan2(mouse.y - player.y, mouse.x - player.x);
 
