@@ -183,6 +183,7 @@ int main() {
         struct Actor player = { 100, 100, 0, 0, 0, 0, 0 };
         SDL_Point mouse = { 0, 0 };
         SDL_Point tilePoint = { SPRITE_SIZE, 0 };
+        struct Actor projectiles[10];
 
         while (isRunning) {
           SDL_RenderClear(gRenderer);
@@ -205,6 +206,13 @@ int main() {
                 case SDLK_DOWN:   player.yAcc -= 1; break;
                 case SDLK_LEFT:   player.xAcc += 1; break;
                 case SDLK_RIGHT:  player.xAcc -= 1; break;
+              }
+            }
+            else if (event.type == SDL_MOUSEBUTTONDOWN) {
+              switch (event.button.button) {
+                case SDL_BUTTON_LEFT:
+                  fireBolt(player, &projectiles, 0);
+                  break;
               }
             }
             else if (event.type == SDL_MOUSEMOTION) {
