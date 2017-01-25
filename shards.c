@@ -157,7 +157,7 @@ void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
 void fireBolt(struct Actor actor, struct Actor projectiles[], unsigned int index) {
   projectiles[index].x = actor.x;
   projectiles[index].y = actor.y;
-  projectiles[index].s = BOLT_SPEED;
+  projectiles[index].s = BOLT_SPEED + sqrt(pow(actor.xVel, 2) + pow(actor.yVel, 2));
   projectiles[index].life = 50;
   projectiles[index].r = actor.r;
   projectiles[index].xVel = 0;
