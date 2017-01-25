@@ -22,7 +22,7 @@ const int PALETTE[32] = {
 #define SPRITE_SIZE 16
 #define SPRITE_LENGTH (SPRITE_SIZE * SPRITE_SIZE)
 
-const int SPRITES[SPRITE_LENGTH * 2] = {
+const int SPRITES[SPRITE_LENGTH * 4] = {
   0,0,0,0,0,0,4,4,4,0,0,0,0,0,0,0,
   0,0,0,4,4,4,4,4,4,0,0,0,0,0,0,0,
   4,4,4,4,4,3,3,3,4,4,0,0,0,0,0,0,
@@ -55,7 +55,41 @@ const int SPRITES[SPRITE_LENGTH * 2] = {
   5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,
   5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,
   5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
-  5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
+  5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,
+
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,
+  0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,
+  0,0,0,2,2,2,2,2,2,2,2,2,2,2,0,0,
+  0,0,0,0,0,0,2,2,2,2,2,2,2,0,0,0,
+  0,0,0,0,0,0,0,0,0,2,2,2,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,
+  0,0,0,0,0,0,2,2,2,2,2,2,2,2,0,0,
+  0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,
+  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+  2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
+  0,0,0,2,2,2,2,2,2,2,2,2,2,2,2,0,
+  0,0,0,0,0,0,2,2,2,2,2,2,2,2,0,0,
+  0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 };
 
 struct Timer {
@@ -69,9 +103,8 @@ const double FRICTION = 0.6;
 const unsigned short PLAYER_SPEED = 4;
 struct Actor {
   int x, y;
-  float xVel, yVel;
   double r;
-  short xAcc, yAcc;
+  float xVel, yVel, xAcc, yAcc;
 };
 
 void setPaletteColor(int *renderer, int paletteNumber) {
@@ -110,14 +143,24 @@ void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
 
   for (unsigned int i = start; i < start + SPRITE_LENGTH; i++) {
     if (SPRITES[i] > 0) {
-      x = (i % SPRITE_SIZE) - (SPRITE_SIZE / 2);
-      y = (i / SPRITE_SIZE) - (SPRITE_SIZE / 2);
+      x = ((i - start) % SPRITE_SIZE) - (SPRITE_SIZE / 2);
+      y = ((i - start) / SPRITE_SIZE) - (SPRITE_SIZE / 2);
       if (i == start || SPRITES[i] != SPRITES[i - 1]) {
         setPaletteColor(renderer, (SPRITES[i] - 1) * 4);
       }
       SDL_RenderDrawPoint(renderer, actX + ((x * cos(actor.r)) - (y * sin(actor.r))), actY + ((y * cos(actor.r)) + (x * sin(actor.r))));
     }
   }
+}
+
+void fireBolt(struct Actor actor, struct Actor projectiles[], unsigned int index) {
+  projectiles[index].x = actor.x;
+  projectiles[index].y = actor.y;
+  projectiles[index].r = actor.r;
+  projectiles[index].xVel = 0;
+  projectiles[index].yVel = 0;
+  projectiles[index].xAcc = cos(actor.r);
+  projectiles[index].yAcc = sin(actor.r);
 }
 
 int main() {
