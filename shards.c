@@ -7,12 +7,12 @@ const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 600;
 
 #define TICKS_PER_FRAME 1000.f / 60.f
-
 #define SPRITE_SIZE 16
 #define SPRITE_LENGTH (SPRITE_SIZE * SPRITE_SIZE)
 
 float FRICTION = 0.6;
 unsigned int PLAYER_SPEED = 4;
+unsigned int BOLT_SPEED = 5;
 
 const int PALETTE[32] = {
   0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE,
@@ -103,7 +103,7 @@ struct Timer {
 };
 
 struct Actor {
-  int x, y, life;
+  int x, y, s, life;
   double r;
   float xVel, yVel, xAcc, yAcc;
 };
@@ -132,8 +132,8 @@ void moveActor(struct Actor *actor) {
   if ((actor->xVel > 0 && actor->xVel < 0.1) || (actor->xVel < 0 && actor->xVel > -0.1)) actor->xVel = 0;
   if ((actor->yVel > 0 && actor->yVel < 0.1) || (actor->yVel < 0 && actor->yVel > -0.1)) actor->yVel = 0;
 
-  actor->x += actor->xVel * PLAYER_SPEED;
-  actor->y += actor->yVel * PLAYER_SPEED;
+  actor->x += actor->xVel * actor->s;
+  actor->y += actor->yVel * actor->s;
 }
 
 void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
@@ -157,6 +157,7 @@ void renderActor(int *renderer, struct Actor actor, int spriteNumber) {
 void fireBolt(struct Actor actor, struct Actor projectiles[], unsigned int index) {
   projectiles[index].x = actor.x;
   projectiles[index].y = actor.y;
+  projectiles[index].s = BOLT_SPEED;
   projectiles[index].life = 50;
   projectiles[index].r = actor.r;
   projectiles[index].xVel = 0;
@@ -182,7 +183,7 @@ int main() {
         int frames = 0;
         int frameTicks = 0;
         struct Timer frameTimer = { SDL_GetTicks(), 0, false, false };
-        struct Actor player = { 100, 100, 100, 0, 0, 0, 0, 0 };
+        struct Actor player = { 100, 100, PLAYER_SPEED, 100, 0, 0, 0, 0, 0 };
         SDL_Point mouse = { 0, 0 };
         SDL_Point tilePoint = { SPRITE_SIZE, 0 };
 
