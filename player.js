@@ -12,7 +12,7 @@ gPlayer = {
     if (this.allowFire) {
       this.projectiles.push(new Bolt(this.x, this.y, this.rad));
       this.allowFire = false;
-      gAudio.eChan1.startBolt();
+      gAudio.startBolt();
       setTimeout(function() { this.allowFire = true }.bind(this), Bolt.delay);
     }
   },
