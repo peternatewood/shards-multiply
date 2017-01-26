@@ -53,10 +53,10 @@ gAudio = (function(context) {
     },
     playSong: function(song) {
       var start = 0;
-      song.forEach(function(voice) {
+      song.forEach(function(voice, vIndex) {
         voice.forEach(function(note) {
-          this.playNote(note[0], note[1], note[2], start, note[3]);
-          start += note[3];
+          this.playNote(vIndex + 1, note[0], note[1], start, note[2]);
+          start += note[2];
         }, this);
       }, this);
     }
@@ -64,15 +64,15 @@ gAudio = (function(context) {
 })(new AudioContext());
 
 var titleSong = [[
-  [1, 'c', 5, 0.2],
-  [1, 'd', 5, 0.2],
-  [1, 'e', 5, 0.4],
-  [1, 'b', 5, 0.4],
-  [1, 'a', 5, 0.2],
-  [1, 'gb',5, 0.2],
-  [1, 'a', 5, 0.4],
-  [1, 'g', 5, 0.2],
-  [1, 'e', 5, 0.2],
-  [1, 'g', 5, 0.4],
-  [1, 'gb',5, 0.4],
+  ['c', 5, 0.2],
+  ['d', 5, 0.2],
+  ['e', 5, 0.4],
+  ['b', 5, 0.4],
+  ['a', 5, 0.2],
+  ['gb',5, 0.2],
+  ['a', 5, 0.4],
+  ['g', 5, 0.2],
+  ['e', 5, 0.2],
+  ['g', 5, 0.4],
+  ['gb',5, 0.4],
 ]];
