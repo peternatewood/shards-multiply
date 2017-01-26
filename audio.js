@@ -50,6 +50,15 @@ gAudio = (function(context) {
       }
       this['mChan' + chan].start(base * Math.pow(2, octave), start);
       this['mChan' + chan].stop(context.currentTime + start + duration);
+    },
+    playSong: function(song) {
+      var start = 0;
+      song.forEach(function(voice) {
+        voice.forEach(function(note) {
+          this.playNote(note[0], note[1], note[2], start, note[3]);
+          start += note[3];
+        }, this);
+      }, this);
     }
   }
 })(new AudioContext());
