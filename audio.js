@@ -22,6 +22,7 @@ gAudio = (function(context) {
 
   return {
     eChan1: new AudioChannel(),
+    mChan1: new AudioChannel(),
     startBolt: function() {
       var now = context.currentTime;
       this.eChan1.start(now);
