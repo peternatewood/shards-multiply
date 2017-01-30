@@ -45,6 +45,11 @@ var renderPath, fill, stroke;
     if (lineWidth) context.lineWidth = lineWidth;
     context.stroke();
   }
+
+  strokeRect = function(x, y, w, h, lineWidth) {
+    if (lineWidth) context.lineWidth = lineWidth;
+    context.strokeRect(x, y, w, h);
+  }
 }) (document.getElementById('canvas').getContext('2d'));
 
 var gInput = {}
