@@ -41,7 +41,6 @@ var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText;
     if (fill) context.fillStyle = fill;
     context.fill();
   }
-
   stroke = function(stroke, lineWidth) {
     if (stroke) context.strokeStyle = stroke;
     if (lineWidth) context.lineWidth = lineWidth;
@@ -50,24 +49,31 @@ var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText;
 
   fillRect = function(x, y, w, h, fill) {
     if (fill) context.fillStyle = fill;
-    context.strokeRect(x, y, w, h);
+    context.fillRect(x, y, w, h);
   }
-
   strokeRect = function(x, y, w, h, stroke, lineWidth) {
     if (stroke) context.strokeStyle = stroke;
     if (lineWidth) context.lineWidth = lineWidth;
     context.strokeRect(x, y, w, h);
   }
 
-  fillText = function(text, x, y, fill, font) {
+  fillText = function(text, x, y, fill, options) {
     if (fill) context.fillStyle = fill;
-    if (font) context.font = font;
+    if (options) {
+      for (var o in options) {
+        if (options.hasOwnProperty(o) && context[o]) context[o] = options[o];
+      }
+    }
     context.fillText(text, x, y);
   }
-  strokeText = function(text, x, y, stroke, lineWidth, font) {
+  strokeText = function(text, x, y, stroke, lineWidth, options) {
     if (stroke) context.strokeStyle = stroke;
     if (lineWidth) context.lineWidth = lineWidth;
-    if (font) context.font = font;
+    if (options) {
+      for (var o in options) {
+        if (options.hasOwnProperty(o) && context[o]) context[o] = options[o];
+      }
+    }
     context.strokeText(text, x, y);
   }
 }) (document.getElementById('canvas').getContext('2d'));
