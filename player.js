@@ -82,26 +82,19 @@ gPlayer = {
     });
     this.projectiles = liveProjectiles;
   },
-  render: (function(context) {
-    function render() {
-      context.beginPath();
-      context.moveTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad)) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad)) - gCamera.y);
-      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))) - gCamera.y);
-      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2))) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))) - gCamera.y);
-      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))) - gCamera.y);
-      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI)) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)) - gCamera.y);
-      context.lineTo(this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))) - gCamera.y);
-      context.lineTo(this.x + (PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2))) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))) - gCamera.y);
-      context.lineTo(this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))) - gCamera.y);
-      context.closePath();
+  render: function() {
+    renderPath([
+      ['moveTo', this.x + (PLAYER_RADIUS * Math.cos(this.rad)) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad)) - gCamera.y],
+      ['lineTo', this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))) - gCamera.y],
+      ['lineTo', this.x + (PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2))) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))) - gCamera.y],
+      ['lineTo', this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))) - gCamera.y],
+      ['lineTo', this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI)) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)) - gCamera.y],
+      ['lineTo', this.x + ((PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))) - gCamera.y],
+      ['lineTo', this.x + (PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2))) - gCamera.x, this.y + (PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))) - gCamera.y],
+      ['lineTo', this.x + ((PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4))) - gCamera.x, this.y + ((PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))) - gCamera.y],
+    ], true);
 
-      context.fillStyle = '#49D';
-      context.strokeStyle = '#FB7';
-      context.lineWidth = 3;
-
-      context.fill();
-      context.stroke();
-    }
-    return render;
-  })(gRenderer.context)
+    fill('#49D');
+    stroke('#FB7', 3);
+  }
 }
