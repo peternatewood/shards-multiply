@@ -38,7 +38,9 @@ Shard = function(x, y, type) {
   this.rad = 0;
   this.type = type;
   this.speed = Shard.speed(type);
+  this.life = 16;
   this.dying = false;
+  this.size = 20;
 
   return this;
 }
@@ -52,7 +54,8 @@ Shard.prototype.collide = function(actor) {
   return Math.sqrt(Math.pow(actor.x - this.x, 2) + Math.pow(actor.y - this.y, 2)) < actor.size + 12;
 }
 Shard.prototype.update = function() {
-  if (! this.dying) {
+  if (this.dying) this.life--;
+  else {
     var xAcc = 0;
     var yAcc = 0;
     this.xVel *= FRICTION;
@@ -78,9 +81,9 @@ Shard.prototype.update = function() {
 
     this.x = Math.min(Math.min(gCamera.x + SCREEN_WIDTH, gScene.bounds.r) - 20, Math.max(Math.max(gCamera.x, gScene.bounds.l) + 20, this.x + this.xVel * this.speed));
     this.y = Math.min(Math.min(gCamera.y + SCREEN_HEIGHT, gScene.bounds.b) - 20, Math.max(Math.max(gCamera.y, gScene.bounds.t) + 20, this.y + this.yVel * this.speed));
-  }
 
-  if (this.collide(gPlayer)) this.dying = true;
+    if (this.collide(gPlayer)) this.dying = true;
+  }
 }
 Shard.prototype.render = function() {
   var path = [];
@@ -105,7 +108,16 @@ Shard.prototype.render = function() {
       ];
       break;
   }
+
   renderPath(path, true, this.x - gCamera.x, this.y - gCamera.y);
   stroke(SHARD_COLORS[this.type][1], 3);
   fill(SHARD_COLORS[this.type][0]);
+
+  if (this.dying) {
+    renderPath([
+      ['moveTo', 0, 16 - this.life],
+      ['arc', 0, 0, 16 - this.life, 0, 2 * Math.PI],
+    ], true, this.x - gCamera.x, this.y - gCamera.y);
+    fill('#EEE');
+  }
 }
