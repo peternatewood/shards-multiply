@@ -19,15 +19,17 @@ var round = function(num, place) {
 
 var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText;
 (function(context) {
-  renderPath = function(pathPoints, close) {
+  renderPath = function(pathPoints, close, xOff, yOff) {
+    var xOff = typeof xOff === 'number' ? xOff : 0;
+    var yOff = typeof yOff === 'number' ? yOff : 0;
     context.beginPath();
     pathPoints.forEach(function(p) {
       switch(p[0]) {
-        case 'moveTo' : context.moveTo(p[1], p[2]);
+        case 'moveTo' : context.moveTo(p[1] + xOff, p[2] + yOff);
           break;
-        case 'lineTo' : context.lineTo(p[1], p[2]);
+        case 'lineTo' : context.lineTo(p[1] + xOff, p[2] + yOff);
           break;
-        case 'arc'  : context.arc(p[1], p[2], p[3], p[4], p[5]);
+        case 'arc'  : context.arc(p[1] + xOff, p[2] + yOff, p[3], p[4], p[5]);
           break;
       }
     });
