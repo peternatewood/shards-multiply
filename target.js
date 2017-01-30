@@ -27,6 +27,7 @@ Target.prototype.render = function() {
 
 var SHARD_COLORS = [
   ['#37D', '#7AF'],
+  ['#D35', '#F79']
 ];
 
 Shard = function(x, y, type) {
@@ -44,6 +45,7 @@ Shard = function(x, y, type) {
 Shard.speed = function(type) {
   switch (type) {
     case 0: return 3;
+    case 1: return 2;
   }
 }
 Shard.prototype.collide = function(actor) {
@@ -55,11 +57,17 @@ Shard.prototype.update = function() {
     var yAcc = 0;
     this.xVel *= FRICTION;
     this.yVel *= FRICTION;
+    this.rad = Math.atan2(gPlayer.y - this.y, gPlayer.x - this.x);
     switch (this.type) {
       case 0:
-        this.rad = Math.atan2(gPlayer.y - this.y, gPlayer.x - this.x);
         xAcc = Math.cos(this.rad);
         yAcc = Math.sin(this.rad);
+        break;
+      case 1:
+        if (Math.sqrt(Math.pow(gPlayer.x - this.x, 2) + Math.pow(gPlayer.y - this.y, 2)) > gPlayer.size * 10) {
+          xAcc = Math.cos(this.rad);
+          yAcc = Math.sin(this.rad);
+        }
         break;
     }
     this.xVel += xAcc;
@@ -86,6 +94,14 @@ Shard.prototype.render = function() {
         ['lineTo', 16 * Math.cos(this.rad + Math.PI), 16 * Math.sin(this.rad + Math.PI)],
         ['lineTo', 5 * Math.cos(this.rad - (Math.PI / 2)), 5 * Math.sin(this.rad - (Math.PI / 2))],
         ['lineTo', 2 * Math.cos(this.rad - (Math.PI / 2)), 2 * Math.sin(this.rad - (Math.PI / 2))],
+      ];
+      break;
+    case 1:
+      path = [
+        ['moveTo', 14 * Math.cos(this.rad), 14 * Math.sin(this.rad)],
+        ['lineTo', 7 * Math.cos(this.rad + (Math.PI * 2 / 3)), 7 * Math.sin(this.rad + (Math.PI * 2 / 3))],
+        ['lineTo', 14 * Math.cos(this.rad + Math.PI), 14 * Math.sin(this.rad + Math.PI)],
+        ['lineTo', 7 * Math.cos(this.rad - (Math.PI * 2 / 3)), 7 * Math.sin(this.rad - (Math.PI * 2 / 3))],
       ];
       break;
   }
