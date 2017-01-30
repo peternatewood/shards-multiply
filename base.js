@@ -17,6 +17,36 @@ var round = function(num, place) {
   return Math.round(num * mod) / mod;
 }
 
+var renderPath, fill, stroke;
+(function(context) {
+  renderPath = function(pathPoints, close) {
+    context.beginPath();
+    pathPoints.forEach(function(p) {
+      switch(p[0]) {
+        case 'moveTo' : context.moveTo(p[1], p[2]);
+          break;
+        case 'lineTo' : context.lineTo(p[1], p[2]);
+          break;
+        case 'arc'  : context.arc(p[1], p[2], p[3], p[4], p[5]);
+          break;
+      }
+    });
+
+    if (close) context.closePath();
+  }
+
+  fill = function(fill) {
+    if (fill) context.fillStyle = fill;
+    context.fill();
+  }
+
+  stroke = function(stroke, lineWidth) {
+    if (stroke) context.strokeStyle = stroke;
+    if (lineWidth) context.lineWidth = lineWidth;
+    context.stroke();
+  }
+}) (document.getElementById('canvas').getContext('2d'));
+
 var gInput = {}
 var gPlayer = {}
 var gScene = {}
