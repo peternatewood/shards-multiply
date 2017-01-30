@@ -65,7 +65,7 @@ gInput = {
         ]);
 
         stroke('#2D2', 2);
-        strokeRect(this.mouseX - 0.5, this.mouseY - 0.5, 1, 1, 1);
+        strokeRect(this.mouseX - 0.5, this.mouseY - 0.5, 1, 1, null, 1);
         break;
       case 'triangle':
         renderPath([
