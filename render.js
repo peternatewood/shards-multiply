@@ -1,10 +1,8 @@
 gRenderer = {
   frame: 0,
-  canvas: document.getElementById('canvas'),
-  context: this.canvas.getContext('2d'),
   render: function() {
     this.context.fillStyle = '#000';
-    this.context.fillRect(0, 0, canvas.width, canvas.height);
+    this.context.fillRect(0, 0, this.context.canvas.width, this.context.canvas.height);
 
     switch (gScene.scene) {
       case 'title':
