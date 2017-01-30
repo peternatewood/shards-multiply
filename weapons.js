@@ -37,43 +37,38 @@ Bolt.prototype.collide = function(other) {
 
   return collide;
 }
-Bolt.prototype.render = (function(context) {
-  function render() {
-    var x = this.x - gCamera.x;
-    var y = this.y - gCamera.y;
+Bolt.prototype.render = function() {
+  var x = this.x - gCamera.x;
+  var y = this.y - gCamera.y;
 
-    if (gCamera.isInView(this)) {
-      context.beginPath();
-      switch (this.life) {
-        case 4:
-          context.moveTo(x + (4 * Math.cos(this.rad)), y + (4 * Math.sin(this.rad)));
-          context.lineTo(x + (4 * Math.cos(this.rad + (Math.PI / 2))), y + (4 * Math.sin(this.rad + (Math.PI / 2))));
-          context.lineTo(x + (8 * Math.cos(this.rad + Math.PI)), y + (8 * Math.sin(this.rad + Math.PI)));
-          context.lineTo(x + (4 * Math.cos(this.rad - (Math.PI / 2))), y + (4 * Math.sin(this.rad - (Math.PI / 2))));
-          break;
-        case 3:
-        case 2:
-        case 1:
-          context.moveTo(x + (3 * (4 - this.life)), y);
-          context.arc(x + (3 * (4 - this.life)), y, 1 * this.life, 0, Math.PI * 2);
-          context.moveTo(x, y - (3 * (4 - this.life)));
-          context.arc(x, y - (3 * (4 - this.life)), 1 * this.life, 0, Math.PI * 2);
-          context.moveTo(x - (3 * (4 - this.life)), y);
-          context.arc(x - (3 * (4 - this.life)), y, 1 * this.life, 0, Math.PI * 2);
-          context.moveTo(x, y + (3 * (4 - this.life)));
-          context.arc(x, y + (3 * (4 - this.life)), 1 * this.life, 0, Math.PI * 2);
-          break;
-      }
-      context.closePath();
-
-      context.fillStyle = '#FFF';
-      context.strokeStyle = '#F88';
-      context.lineWidth = 2;
-
-      context.stroke();
-      context.fill();
+  if (gCamera.isInView(this)) {
+    switch (this.life) {
+      case 4:
+        renderPath([
+          ['moveTo', x + (4 * Math.cos(this.rad)), y + (4 * Math.sin(this.rad))],
+          ['lineTo', x + (4 * Math.cos(this.rad + (Math.PI / 2))), y + (4 * Math.sin(this.rad + (Math.PI / 2)))],
+          ['lineTo', x + (8 * Math.cos(this.rad + Math.PI)), y + (8 * Math.sin(this.rad + Math.PI))],
+          ['lineTo', x + (4 * Math.cos(this.rad - (Math.PI / 2))), y + (4 * Math.sin(this.rad - (Math.PI / 2)))],
+        ], true);
+        break;
+      case 3:
+      case 2:
+      case 1:
+        renderPath([
+          ['moveTo', x + (3 * (4 - this.life)), y],
+          ['arc', x + (3 * (4 - this.life)), y, 1 * this.life, 0, Math.PI * 2],
+          ['moveTo', x, y - (3 * (4 - this.life))],
+          ['arc', x, y - (3 * (4 - this.life)), 1 * this.life, 0, Math.PI * 2],
+          ['moveTo', x - (3 * (4 - this.life)), y],
+          ['arc', x - (3 * (4 - this.life)), y, 1 * this.life, 0, Math.PI * 2],
+          ['moveTo', x, y + (3 * (4 - this.life))],
+          ['arc', x, y + (3 * (4 - this.life)), 1 * this.life, 0, Math.PI * 2],
+        ], true);
+        break;
     }
-    if (this.dying) this.life--;
+
+    stroke('#F88', 2);
+    fill('#FFF');
   }
-  return render;
-})(gRenderer.context);
+  if (this.dying) this.life--;
+}
