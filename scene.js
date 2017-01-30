@@ -2,6 +2,7 @@ gScene = {
   scene: 'title',
   level: 0,
   targets: [],
+  shards: [new Shard(40, 40, 1)],
   titleX: -812,
   titleY: 192,
   title: [],
@@ -56,6 +57,13 @@ gScene = {
           break;
         case 'game':
           gCamera.update();
+          var liveShards = [];
+          this.shards.forEach(function(s) {
+            s.update();
+            if (gCamera.isInView(s)) s.render();
+            if (s.life > 0) liveShards.push(s);
+          });
+          this.shards = liveShards;
         case 'hangar':
           gPlayer.update();
           break;
@@ -354,20 +362,20 @@ gScene = {
     else {
       switch (this.level) {
         case 1:
-          var xInc = (this.bounds.r - this.bounds.l) / (233 - 32);
-          var yInc = (this.bounds.b - this.bounds.t) / (233 - 32);
-          var fillStyle = '#4AC';
           for (var x = this.bounds.l; x < this.bounds.r; x += 64) {
             for (var y = this.bounds.t; y < this.bounds.b; y += 64) {
               if (gCamera.isInView({ x: x, y: y, size: 64 })) {
-                fillRect(x - gCamera.x, y - gCamera.y, 64, 64, fillStyle);
+                fillRect(x - gCamera.x + 2, y - gCamera.y + 12, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 8, y - gCamera.y + 4, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 14, y - gCamera.y + 16, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 28, y - gCamera.y + 18, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 24, y - gCamera.y + 28, 1, 1, '#FFF');
               }
-              fillStyle = fillStyle == '#4AC' ? '#C4A' : '#4AC';
             }
-            fillStyle = fillStyle == '#4AC' ? '#C4A' : '#4AC';
           }
           break;
       }
+      this.shards.forEach(function(s) { if (gCamera.isInView(s)) s.render(); });
     }
   },
   renderKey: function(command, x, y) {
