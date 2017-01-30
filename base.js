@@ -17,7 +17,7 @@ var round = function(num, place) {
   return Math.round(num * mod) / mod;
 }
 
-var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText;
+var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText, createLinearGradient;
 (function(context) {
   renderPath = function(pathPoints, close, xOff, yOff) {
     var xOff = typeof xOff === 'number' ? xOff : 0;
@@ -75,6 +75,14 @@ var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText;
       }
     }
     context.strokeText(text, x, y);
+  }
+
+  createLinearGradient = function(x1, y1, x2, y2, colorStops) {
+    var grad = context.createLinearGradient(x1, y1, x2, y2);
+    colorStops.forEach(function(s, i) {
+      grad.addColorStop(i, s);
+    });
+    return grad;
   }
 }) (document.getElementById('canvas').getContext('2d'));
 
