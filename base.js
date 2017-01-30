@@ -17,7 +17,7 @@ var round = function(num, place) {
   return Math.round(num * mod) / mod;
 }
 
-var renderPath, fill, stroke;
+var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText;
 (function(context) {
   renderPath = function(pathPoints, close) {
     context.beginPath();
@@ -46,9 +46,27 @@ var renderPath, fill, stroke;
     context.stroke();
   }
 
-  strokeRect = function(x, y, w, h, lineWidth) {
+  fillRect = function(x, y, w, h, fill) {
+    if (fill) context.fillStyle = fill;
+    context.strokeRect(x, y, w, h);
+  }
+
+  strokeRect = function(x, y, w, h, stroke, lineWidth) {
+    if (stroke) context.strokeStyle = stroke;
     if (lineWidth) context.lineWidth = lineWidth;
     context.strokeRect(x, y, w, h);
+  }
+
+  fillText = function(text, x, y, fill, font) {
+    if (fill) context.fillStyle = fill;
+    if (font) context.font = font;
+    context.fillText(text, x, y);
+  }
+  strokeText = function(text, x, y, stroke, lineWidth, font) {
+    if (stroke) context.strokeStyle = stroke;
+    if (lineWidth) context.lineWidth = lineWidth;
+    if (font) context.font = font;
+    context.strokeText(text, x, y);
   }
 }) (document.getElementById('canvas').getContext('2d'));
 
