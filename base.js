@@ -17,6 +17,13 @@ var round = function(num, place) {
   return Math.round(num * mod) / mod;
 }
 
+var decToHex = function(dec) {
+  return [Math.floor(dec / 16), dec % 16].map(function(d) {
+    if (d < 10) return d.toString();
+    else return String.fromCharCode(d + 55);
+  }).join('');
+}
+
 var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText, createLinearGradient;
 (function(context) {
   renderPath = function(pathPoints, close, xOff, yOff) {
