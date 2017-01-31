@@ -25,6 +25,7 @@ Target.prototype.render = function() {
   }
 }
 
+var SHARD_LIFE = 14;
 var SHARD_COLORS = [
   ['#3377DD', '#77AAFF'],
   ['#DD3355', '#FF7799']
@@ -38,7 +39,7 @@ Shard = function(x, y, type) {
   this.rad = 0;
   this.type = type;
   this.speed = Shard.speed(type);
-  this.life = 16;
+  this.life = SHARD_LIFE;
   this.dying = false;
   this.size = 20;
 
@@ -109,16 +110,23 @@ Shard.prototype.render = function() {
       break;
   }
 
-  var opacity = decToHex(255 * (this.life / 16));
+  var opacity = decToHex(255 * (this.life / SHARD_LIFE));
   renderPath(path, true, this.x - gCamera.x, this.y - gCamera.y);
   stroke(SHARD_COLORS[this.type][1] + opacity, 3);
   fill(SHARD_COLORS[this.type][0] + opacity);
 
   if (this.dying) {
+    var radius = Math.log10(Math.max(1, 10 * (1 - (this.life / SHARD_LIFE)))) * SHARD_LIFE;
     renderPath([
-      ['moveTo', 0, 16 - this.life],
-      ['arc', 0, 0, 16 - this.life, 0, 2 * Math.PI],
+      ['moveTo', 0, radius],
+      ['arc', 0, 0, radius, 0, 2 * Math.PI],
+      ['moveTo', 3, 7 + (2 * radius / 3)],
+      ['arc', 3, 7, 2 * radius / 3, 0, 2 * Math.PI],
+      ['moveTo', -12, -3 + (2 * radius / 3)],
+      ['arc', -12, -3, 2 * radius / 3, 0, 2 * Math.PI],
+      ['moveTo', 10, -6 + (2 * radius / 3)],
+      ['arc', 10, -6, 2 * radius / 3, 0, 2 * Math.PI],
     ], true, this.x - gCamera.x, this.y - gCamera.y);
-    fill('#EEE');
+    fill(this.life < SHARD_LIFE / 2 ? '#CCCCCC' + decToHex(255 * (this.life / (SHARD_LIFE / 2))) : '#EEE');
   }
 }
