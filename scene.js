@@ -368,8 +368,17 @@ gScene = {
                 fillRect(x - gCamera.x + 2, y - gCamera.y + 12, 1, 1, '#FFF');
                 fillRect(x - gCamera.x + 8, y - gCamera.y + 4, 1, 1, '#FFF');
                 fillRect(x - gCamera.x + 14, y - gCamera.y + 16, 1, 1, '#FFF');
-                fillRect(x - gCamera.x + 28, y - gCamera.y + 18, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 28, y - gCamera.y + 48, 1, 1, '#FFF');
                 fillRect(x - gCamera.x + 24, y - gCamera.y + 28, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 32, y - gCamera.y + 34, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 51, y - gCamera.y + 8, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 7, y - gCamera.y + 31, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 62, y - gCamera.y + 4, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 35, y - gCamera.y + 53, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 44, y - gCamera.y + 60, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 61, y - gCamera.y + 33, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 21, y - gCamera.y + 61, 1, 1, '#FFF');
+                fillRect(x - gCamera.x + 60, y - gCamera.y + 55, 1, 1, '#FFF');
               }
             }
           }
