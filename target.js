@@ -26,8 +26,8 @@ Target.prototype.render = function() {
 }
 
 var SHARD_COLORS = [
-  ['#37D', '#7AF'],
-  ['#D35', '#F79']
+  ['#3377DD', '#77AAFF'],
+  ['#DD3355', '#FF7799']
 ];
 
 Shard = function(x, y, type) {
@@ -109,9 +109,10 @@ Shard.prototype.render = function() {
       break;
   }
 
+  var opacity = decToHex(255 * (this.life / 16));
   renderPath(path, true, this.x - gCamera.x, this.y - gCamera.y);
-  stroke(SHARD_COLORS[this.type][1], 3);
-  fill(SHARD_COLORS[this.type][0]);
+  stroke(SHARD_COLORS[this.type][1] + opacity, 3);
+  fill(SHARD_COLORS[this.type][0] + opacity);
 
   if (this.dying) {
     renderPath([
