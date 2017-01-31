@@ -38,7 +38,10 @@ gInput = {
     else if (event.button === 2) this.mouseR = 0;
   },
   isActive: function(command) { return typeof this[command] === 'string' && this[this[command]] === 1 },
-  setMousePos: function(event) { this.mouseX = event.layerX; this.mouseY = event.layerY },
+  setMousePos: function(event) {
+    this.mouseX = event.layerX * (gRenderer.context.canvas.width / canvas.offsetWidth);
+    this.mouseY = event.layerY * (gRenderer.context.canvas.height / canvas.offsetHeight);
+  },
   render: function() {
     var rad = this.rotateCursor ? this.rad : gPlayer.rad + Math.PI;
     if (this.rotateCursor) this.rad += Math.PI / 512;
