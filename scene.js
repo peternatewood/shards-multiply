@@ -2,7 +2,7 @@ gScene = {
   scene: 'title',
   level: 0,
   targets: [],
-  shards: [new Shard(40, 40, 1)],
+  shards: [new Shard(40, 40, 0)],
   titleX: -812,
   titleY: 192,
   title: [],
@@ -375,7 +375,6 @@ gScene = {
           }
           break;
       }
-      this.shards.forEach(function(s) { if (gCamera.isInView(s)) s.render(); });
     }
   },
   renderKey: function(command, x, y) {
@@ -475,5 +474,6 @@ gScene = {
   },
   renderFore: function() {
     this.targets.forEach(function(t) { t.render() });
+    if (this.scene == 'game') this.shards.forEach(function(s) { if (gCamera.isInView(s)) s.render(); });
   }
 }
