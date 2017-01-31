@@ -31,6 +31,7 @@ function init() {
   canvas.addEventListener('mousemove', handleMouseMove);
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mouseup', handleMouseUp);
+  canvas.addEventListener('mouseleave', handleMouseLeave);
   canvas.addEventListener('contextmenu', function(event) { event.preventDefault(); event.stopPropagation() });
 
   window.requestAnimationFrame(step);

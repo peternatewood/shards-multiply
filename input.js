@@ -37,6 +37,7 @@ gInput = {
     if (event.button === 0) this.mouseL = 0;
     else if (event.button === 2) this.mouseR = 0;
   },
+  mouseleave: function(event) { this.mouseL = 0; this.mouseR = 0; },
   isActive: function(command) { return typeof this[command] === 'string' && this[this[command]] === 1 },
   setMousePos: function(event) {
     this.mouseX = event.layerX * (gRenderer.context.canvas.width / canvas.offsetWidth);
@@ -115,3 +116,4 @@ function handleKeyUp(event) {
 function handleMouseDown(event) { gInput.mousedown(event) }
 function handleMouseUp(event) { gInput.mouseup(event) }
 function handleMouseMove(event) { gInput.setMousePos(event) }
+function handleMouseLeave(event) { gInput.mouseleave(event) }
