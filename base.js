@@ -18,7 +18,7 @@ var round = function(num, place) {
 }
 
 var decToHex = function(dec) {
-  return [Math.floor(dec / 16), dec % 16].map(function(d) {
+  return [Math.floor(dec / 16), Math.floor(dec % 16)].map(function(d) {
     if (d < 10) return d.toString();
     else return String.fromCharCode(d + 55);
   }).join('');
