@@ -75,11 +75,13 @@ Shard.prototype.update = function() {
           xAcc = Math.cos(this.rad);
           yAcc = Math.sin(this.rad);
         }
-        if (this.timeToFire == 0) {
-          this.projectiles.push(new Bolt(this, 1));
-          this.timeToFire = Shard.fireDelay;
+        if (gPlayer.life == PLAYER_LIFE) {
+          if (this.timeToFire == 0) {
+            this.projectiles.push(new Bolt(this, 1));
+            this.timeToFire = Shard.fireDelay;
+          }
+          this.timeToFire--;
         }
-        this.timeToFire--;
         break;
     }
     this.xVel += xAcc;
@@ -96,8 +98,9 @@ Shard.prototype.update = function() {
 
   var liveProjectiles = [];
   this.projectiles.forEach(function(p) {
-    var collision = p.collide(gPlayer);
-    if (!collision) {
+    var collision = false;
+    if (p.collide(gPlayer) && gPlayer.life == PLAYER_LIFE) gPlayer.life--;
+    else {
       for (var i in gScene.targets) {
         collision = p.collide(gScene.targets[i]);
         if (collision) break;

@@ -11,7 +11,7 @@ gRenderer = {
       case 'hangar':
       case 'game':
         gScene.renderBack();
-        gPlayer.render();
+        if (gPlayer.life > 0) gPlayer.render();
         gScene.renderFore();
         gPlayer.projectiles.forEach(function(p) { p.render() }.bind(this));
         if (gScene.inTransition) gScene.renderTransition();
