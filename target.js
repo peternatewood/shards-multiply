@@ -40,7 +40,6 @@ Shard = function(x, y, type) {
   this.type = type;
   this.speed = Shard.speed(type);
   this.life = SHARD_LIFE;
-  this.dying = false;
   this.size = 20;
   this.projectiles = [];
   this.timeToFire = 0;
@@ -58,7 +57,7 @@ Shard.prototype.collide = function(actor) {
   return Math.sqrt(Math.pow(actor.x - this.x, 2) + Math.pow(actor.y - this.y, 2)) < actor.size + 12;
 }
 Shard.prototype.update = function() {
-  if (this.dying) this.life--;
+  if (this.life < SHARD_LIFE) this.life--;
   else {
     var xAcc = 0;
     var yAcc = 0;
@@ -93,7 +92,10 @@ Shard.prototype.update = function() {
     this.x = Math.min(Math.min(gCamera.x + SCREEN_WIDTH, gScene.bounds.r) - 20, Math.max(Math.max(gCamera.x, gScene.bounds.l) + 20, this.x + this.xVel * this.speed));
     this.y = Math.min(Math.min(gCamera.y + SCREEN_HEIGHT, gScene.bounds.b) - 20, Math.max(Math.max(gCamera.y, gScene.bounds.t) + 20, this.y + this.yVel * this.speed));
 
-    if (this.collide(gPlayer)) this.dying = true;
+    if (this.life == SHARD_LIFE && gPlayer.life == PLAYER_LIFE && this.collide(gPlayer)) {
+      gPlayer.life--;
+      this.life--;
+    }
   }
 
   var liveProjectiles = [];
@@ -142,7 +144,7 @@ Shard.prototype.render = function() {
   stroke(SHARD_COLORS[this.type][1] + opacity, 3);
   fill(SHARD_COLORS[this.type][0] + opacity);
 
-  if (this.dying) {
+  if (this.life < SHARD_LIFE) {
     var radius = Math.log10(Math.max(1, 10 * (1 - (this.life / SHARD_LIFE)))) * SHARD_LIFE;
     renderPath([
       ['moveTo', 0, radius],
