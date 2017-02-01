@@ -42,9 +42,12 @@ Shard = function(x, y, type) {
   this.life = SHARD_LIFE;
   this.dying = false;
   this.size = 20;
+  this.projectiles = [];
+  this.timeToFire = 0;
 
   return this;
 }
+Shard.fireDelay = 50;
 Shard.speed = function(type) {
   switch (type) {
     case 0: return 3;
@@ -72,6 +75,11 @@ Shard.prototype.update = function() {
           xAcc = Math.cos(this.rad);
           yAcc = Math.sin(this.rad);
         }
+        if (this.timeToFire == 0) {
+          this.projectiles.push(new Bolt(this, 1));
+          this.timeToFire = Shard.fireDelay;
+        }
+        this.timeToFire--;
         break;
     }
     this.xVel += xAcc;
@@ -85,8 +93,24 @@ Shard.prototype.update = function() {
 
     if (this.collide(gPlayer)) this.dying = true;
   }
+
+  var liveProjectiles = [];
+  this.projectiles.forEach(function(p) {
+    var collision = p.collide(gPlayer);
+    if (!collision) {
+      for (var i in gScene.targets) {
+        collision = p.collide(gScene.targets[i]);
+        if (collision) break;
+      }
+    }
+    if (!collision && gScene.bounds.collide(p)) p.dying = true;
+    p.update();
+    if (p.life > 0) liveProjectiles.push(p);
+  });
+  this.projectiles = liveProjectiles;
 }
 Shard.prototype.render = function() {
+  this.projectiles.forEach(function(p) { p.render() });
   var path = [];
   switch (this.type) {
     case 0:
