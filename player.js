@@ -80,6 +80,15 @@ gPlayer = {
         collision = p.collide(gScene.targets[i]);
         if (collision) break;
       }
+      if (!collision) {
+        for (var i in gScene.shards) {
+          if (p.collide(gScene.shards[i])) {
+            if (gScene.shards[i].life == SHARD_LIFE) gScene.shards[i].life--;
+            collision = true;
+            break;
+          }
+        }
+      }
       if (!collision && gScene.bounds.collide(p)) p.dying = true;
       p.update();
       if (p.life > 0) liveProjectiles.push(p);
