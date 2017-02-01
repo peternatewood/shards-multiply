@@ -60,7 +60,6 @@ gScene = {
           var liveShards = [];
           this.shards.forEach(function(s) {
             s.update();
-            if (gCamera.isInView(s)) s.render();
             if (s.life > 0) liveShards.push(s);
           });
           this.shards = liveShards;
