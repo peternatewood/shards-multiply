@@ -1,4 +1,4 @@
-Bolt = function(x, y, rad) {
+Bolt = function(x, y, rad, enemy) {
   this.x = x + (PLAYER_RADIUS * Math.cos(rad));
   this.y = y + (PLAYER_RADIUS * Math.sin(rad));
   this.rad = rad;
@@ -7,6 +7,7 @@ Bolt = function(x, y, rad) {
   this.life = 4;
   this.dying = false;
   this.size = 14;
+  this.enemy = enemy ? true : false;
 
   return this;
 }
@@ -38,35 +39,34 @@ Bolt.prototype.collide = function(other) {
   return collide;
 }
 Bolt.prototype.render = function() {
-  var x = this.x - gCamera.x;
-  var y = this.y - gCamera.y;
-
+  var path = [];
   if (gCamera.isInView(this)) {
     switch (this.life) {
       case 4:
-        renderPath([
-          ['moveTo', x + (4 * Math.cos(this.rad)), y + (4 * Math.sin(this.rad))],
-          ['lineTo', x + (4 * Math.cos(this.rad + (Math.PI / 2))), y + (4 * Math.sin(this.rad + (Math.PI / 2)))],
-          ['lineTo', x + (8 * Math.cos(this.rad + Math.PI)), y + (8 * Math.sin(this.rad + Math.PI))],
-          ['lineTo', x + (4 * Math.cos(this.rad - (Math.PI / 2))), y + (4 * Math.sin(this.rad - (Math.PI / 2)))],
-        ], true);
+        path = [
+          ['moveTo', 4 * Math.cos(this.rad), 4 * Math.sin(this.rad)],
+          ['lineTo', 4 * Math.cos(this.rad + (Math.PI / 2)), 4 * Math.sin(this.rad + (Math.PI / 2))],
+          ['lineTo', 8 * Math.cos(this.rad + Math.PI), 8 * Math.sin(this.rad + Math.PI)],
+          ['lineTo', 4 * Math.cos(this.rad - (Math.PI / 2)), 4 * Math.sin(this.rad - (Math.PI / 2))],
+        ];
         break;
       case 3:
       case 2:
       case 1:
-        renderPath([
-          ['moveTo', x + (3 * (4 - this.life)), y],
-          ['arc', x + (3 * (4 - this.life)), y, 1 * this.life, 0, Math.PI * 2],
-          ['moveTo', x, y - (3 * (4 - this.life))],
-          ['arc', x, y - (3 * (4 - this.life)), 1 * this.life, 0, Math.PI * 2],
-          ['moveTo', x - (3 * (4 - this.life)), y],
-          ['arc', x - (3 * (4 - this.life)), y, 1 * this.life, 0, Math.PI * 2],
-          ['moveTo', x, y + (3 * (4 - this.life))],
-          ['arc', x, y + (3 * (4 - this.life)), 1 * this.life, 0, Math.PI * 2],
-        ], true);
+        path = [
+          ['moveTo', 3 * (4 - this.life), 0],
+          ['arc', 3 * (4 - this.life), 0, 1 * this.life, 0, Math.PI * 2],
+          ['moveTo', 0, 3 * (4 - this.life)],
+          ['arc', 0, 3 * (4 - this.life), 1 * this.life, 0, Math.PI * 2],
+          ['moveTo', -3 * (4 - this.life), 0],
+          ['arc', -3 * (4 - this.life), 0, 1 * this.life, 0, Math.PI * 2],
+          ['moveTo', 0, -3 * (4 - this.life)],
+          ['arc', 0, -3 * (4 - this.life), 1 * this.life, 0, Math.PI * 2],
+        ];
         break;
     }
 
+    renderPath(path, true, this.x - gCamera.x, this.y - gCamera.y);
     stroke('#F88', 2);
     fill('#FFF');
   }
