@@ -10,7 +10,7 @@ gPlayer = {
   projectiles: [],
   fire: function() {
     if (this.allowFire) {
-      this.projectiles.push(new Bolt(this.x, this.y, this.rad));
+      this.projectiles.push(new Bolt(this));
       this.allowFire = false;
       gAudio.startBolt();
       setTimeout(function() { this.allowFire = true }.bind(this), Bolt.delay);
