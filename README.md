@@ -7,11 +7,11 @@ A twin-stick shoot-em-up with free-movement. Each mission is full of enemy ships
 **Live on Website:** No
 
 ## Core Features
-* [ ] **Player Movement**
+* [x] **Player Movement**
   - [x] Horizontal and vertical
   - [x] Ship points toward cursor
   - [x] Friction
-  - [ ] Move through mission area
+  - [x] Move through mission area
 * [x] **Custom Mouse Cursor**
 * [ ] **Pre-game Hangar**
   - [x] Controls visualized on floor
