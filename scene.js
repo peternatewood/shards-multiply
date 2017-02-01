@@ -2,7 +2,7 @@ gScene = {
   scene: 'title',
   level: 0,
   targets: [],
-  shards: [new Shard(40, 40, 1)],
+  shards: [new Shard(40, 40, 0), new Shard(40, 80, 1)],
   titleX: -812,
   titleY: 192,
   title: [],
@@ -64,7 +64,7 @@ gScene = {
           });
           this.shards = liveShards;
         case 'hangar':
-          if (gPlayer.life > 0) gPlayer.update();
+          gPlayer.update();
           break;
         case 'levelTitle':
           if (gInput.isActive('fire')) this.change('game');
