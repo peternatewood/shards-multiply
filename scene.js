@@ -9,6 +9,7 @@ gScene = {
   selectProg: 0,
   inTransition: false,
   transitionProg: 0,
+  flash: 1,
   grad: createLinearGradient(448, 100, 352, 278, ['#FB6', '#B61']),
   bounds: {
     l: 0, t: 0, r: 704, b: 552,
@@ -259,11 +260,17 @@ gScene = {
 
     stroke('#FD8', 4);
     fill(this.grad);
-
+    // Subtitle
     if (this.titleX < 176) this.titleX += 52;
     else {
       strokeText('Click mouse button to start', SCREEN_WIDTH / 2, this.titleY + 260, '#FED', 2, { font: '32px courier', textAlign: 'center' });
       fillText('Click mouse button to start', SCREEN_WIDTH / 2, this.titleY + 260, '#FED');
+    }
+
+    // Flash as title comes in
+    if (this.flash > 0 && this.flash < 72) {
+      fillRect(0, 0, gRenderer.context.canvas.width, gRenderer.context.canvas.height, '#FFFFFF' + decToHex(255 * Math.min(1, (this.flash > 36 ? 72 - this.flash : this.flash) / 36)));
+      this.flash += this.flash < 36 ? 2 : 0.5;
     }
   },
   renderLevelTitle: function() {
