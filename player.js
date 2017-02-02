@@ -7,11 +7,39 @@ gPlayer = {
   size: 20,
   speed: PLAYER_SPEED,
   allowFire: true,
+  firePower: 0,
   projectiles: [],
   life: PLAYER_LIFE,
   fire: function() {
     if (this.allowFire) {
-      this.projectiles.push(new Bolt(this));
+      switch (this.firePower) {
+        case 0:
+          this.projectiles.push(new Bolt(this));
+          break;
+        case 1:
+          var source = {
+            x: this.x + (6 * Math.cos(this.rad + (Math.PI / 2))), y: this.y + (6 * Math.sin(this.rad + (Math.PI / 2))),
+            xVel: this.xVel, yVel: this.yVel,
+            rad: this.rad
+          }
+          this.projectiles.push(new Bolt(source));
+          source.x = this.x + (6 * Math.cos(this.rad - (Math.PI / 2)));
+          source.y = this.y + (6 * Math.sin(this.rad - (Math.PI / 2)));
+          this.projectiles.push(new Bolt(source));
+          break;
+        case 2:
+          this.projectiles.push(new Bolt(this));
+          var source = {
+            x: this.x + (14 * Math.cos(this.rad + (Math.PI * 2 / 3))), y: this.y + (14 * Math.sin(this.rad + (Math.PI * 2 / 3))),
+            xVel: this.xVel, yVel: this.yVel,
+            rad: this.rad
+          }
+          this.projectiles.push(new Bolt(source));
+          source.x = this.x + (14 * Math.cos(this.rad - (Math.PI * 2 / 3)));
+          source.y = this.y + (14 * Math.sin(this.rad - (Math.PI * 2 / 3)));
+          this.projectiles.push(new Bolt(source));
+          break;
+      }
       this.allowFire = false;
       gAudio.startBolt();
       setTimeout(function() { this.allowFire = true }.bind(this), Bolt.delay);
