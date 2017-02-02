@@ -1,3 +1,20 @@
+var SHINE_PATH = [
+  [  0,  14], // S
+  [ 15,  27], // H
+  [ 28,  36], // A
+  [ 37,  53], // R
+  [ 52,  64], // D
+  [ 65,  79], // S
+
+  [ 80,  92], // M
+  [ 93, 106], // U
+  [107, 113], // L
+  [114, 122], // T
+  [123, 133], // I
+  [134, 145], // P
+  [146, 152], // L
+  [153, 165], // Y
+];
 gScene = {
   scene: 'title',
   level: 0,
@@ -75,7 +92,7 @@ gScene = {
   },
   renderTitle: function() {
     // Shards Multiply
-    renderPath([
+    var path = [
       // S
       ['moveTo', 24, 0],
       ['lineTo', 96, 0],
@@ -256,10 +273,23 @@ gScene = {
       ['lineTo', 629, 174],
       ['lineTo', 578, 148],
       ['lineTo', 583, 112],
-    ], false, this.titleX, this.titleY);
+    ];
+    renderPath(path, false, this.titleX, this.titleY);
 
     stroke('#FD8', 4);
     fill(this.grad);
+
+    if (gRenderer.frame >= 40 && gRenderer.frame < 58) {
+      var letter = Math.floor(gRenderer.frame - 40) % 9;
+      if (letter < 6) {
+        renderPath(path.slice(SHINE_PATH[letter][0], SHINE_PATH[letter][1]), false, this.titleX, this.titleY);
+        fill('#FFF');
+      }
+      if (letter > 0) {
+        renderPath(path.slice(SHINE_PATH[letter + 5][0], SHINE_PATH[letter + 5][1]), false, this.titleX, this.titleY);
+        fill('#FFF');
+      }
+    }
     // Subtitle
     if (this.titleX < 176) this.titleX += 52;
     else {
