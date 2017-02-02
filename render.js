@@ -29,6 +29,6 @@ gRenderer = {
     // this.context.fillText('gCamera: ' + gCamera.x + ', ' + gCamera.y + ' vel: ' + gCamera.xVel + ', ' + gCamera.yVel, 12, 12);
     // this.context.fillText('gPlayer: ' + gPlayer.x + ', ' + gPlayer.y + ' vel: ' + gPlayer.xVel + ', ' + gPlayer.yVel, 12, 36);
 
-    this.frame = (this.frame + 1) % 60;
+    this.frame = (this.frame + 1) % 240;
   }
 }
