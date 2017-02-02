@@ -41,7 +41,7 @@ Bolt.prototype.collide = function(other) {
 }
 Bolt.prototype.render = function() {
   var path = [];
-  var strokeStyle = '#F88';
+  var strokeStyle = '#8F8';
   var fillStyle = '#FFF';
   if (gCamera.isInView(this)) {
     if (this.life == 4) {

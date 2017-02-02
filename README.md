@@ -48,7 +48,7 @@ S - move down<br/>
 A - move left<br/>
 D - move right
 
-Spacebar* - fire thrusters
+Spacebar - fire thrusters
 
 Primary Mouse Button (left on most mice, right on left-handed mice) - fire plasma bolts (unlimited)<br/>
 Secondary Mouse Button* - fire loaded secondary weapon (ammunition-based)
