@@ -88,6 +88,20 @@ gPlayer = {
           break;
         }
       }
+      if (!collision) {
+        for (var i in gScene.powerups) {
+          if (gScene.powerups[i].collide()) {
+            switch (gScene.powerups[i].getType()) {
+              case 'bolt': if (this.firePower < 2) this.firePower++; break;
+              case 'clone': console.log('clone powerup'); break;
+              case 'speed': console.log('speed powerup'); break;
+              case 'battery': console.log('battery powerup'); break;
+            }
+            gScene.powerups.splice(i, 1);
+            break;
+          }
+        }
+      }
 
       if (Math.abs(this.xVel) < 0.01) this.xVel = 0;
       if (Math.abs(this.yVel) < 0.01) this.yVel = 0;
