@@ -73,6 +73,13 @@ var Powerup = function(x, y, type) {
 
   return this;
 }
+Powerup.types = ['bolt', 'clone', 'speed', 'battery'];
+Powerup.prototype.collide = function() {
+  return gPlayer.x >= this.x - POWERUP_SIZE && gPlayer.y >= this.y - POWERUP_SIZE && gPlayer.x <= this.x + POWERUP_SIZE && gPlayer.y <= this.y + POWERUP_SIZE;
+}
+Powerup.prototype.getType = function() {
+  return Powerup.types[this.type];
+}
 Powerup.prototype.render = function() {
   renderPath([
     ['moveTo', -POWERUP_SIZE, 6 - POWERUP_SIZE],
