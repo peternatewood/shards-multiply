@@ -23,8 +23,8 @@ A twin-stick shoot-em-up with free-movement. Each mission is full of enemy ships
 * [ ] **Multiple Missions**
 * [ ] **Powerups**
   - [ ] Duplicate Plasma Bolts
-  - [ ] Missile Ammo
-  - [ ] Laser Beam Battery
+  - [ ] Speed Up
+  - [ ] Secondary Weapon Battery
   - [ ] Clone Ship
 * [ ] **Missions**
   - [ ] Powerups placed throughout area
