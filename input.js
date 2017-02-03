@@ -18,8 +18,16 @@ gInput = {
   rotateCursor: true,
   cursor: 'triangle',
   validKey: function(key) { return typeof this[key.toLowerCase()] === 'number' },
-  press: function(key) { this[key.toLowerCase()] = 1; },
-  release: function(key) { this[key.toLowerCase()] = 0; },
+  press: function(key) {
+    var key = key.toLowerCase();
+    this[key] = 1;
+    if (this.thrust == key) gPlayer.speed = THRUSTER_SPEED;
+  },
+  release: function(key) {
+    var key = key.toLowerCase();
+    this[key] = 0;
+    if (this.thrust == key) gPlayer.speed = PLAYER_SPEED;
+  },
   releaseAll: function() {
     this.w = 0;
     this.s = 0;

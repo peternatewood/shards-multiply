@@ -65,12 +65,10 @@ gPlayer = {
       this.xVel *= FRICTION;
       this.yVel *= FRICTION;
       if (gInput.isActive('thrust')) {
-        this.speed = THRUSTER_SPEED;
         xAcc = Math.cos(this.rad);
         yAcc = Math.sin(this.rad);
       }
       else {
-        this.speed = PLAYER_SPEED;
         if (gInput.isActive('left')) xAcc--;
         if (gInput.isActive('right')) xAcc++;
         if (gInput.isActive('up')) yAcc--;
