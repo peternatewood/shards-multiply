@@ -19,12 +19,12 @@ gScene = {
   scene: 'title',
   level: 0,
   targets: [],
-  shards: [new Shard(40, 40, 0), new Shard(40, 80, 1)],
+  shards: [/**new Shard(40, 40, 0), new Shard(40, 80, 1)*/],
   powerups: [
     new Powerup(40, 40, 0),
-    new Powerup(120, 40, 1),
-    new Powerup(40, 120, 2),
-    new Powerup(120, 120, 3)
+    new Powerup(120, 40, 0),
+    new Powerup(40, 120, 0),
+    new Powerup(120, 120, 0)
   ],
   titleX: -812,
   titleY: 192,
@@ -426,6 +426,7 @@ gScene = {
           }
           break;
       }
+      this.powerups.forEach(function(p) { if (gCamera.isInView(p)) p.render() });
     }
   },
   renderKey: function(command, x, y) {
@@ -525,7 +526,6 @@ gScene = {
   },
   renderFore: function() {
     this.targets.forEach(function(t) { t.render() });
-    this.powerups.forEach(function(p) { if (gCamera.isInView(p)) p.render() });
     if (this.scene == 'game') {
       this.shards.forEach(function(s) { if (gCamera.isInView(s)) s.render() });
     }
