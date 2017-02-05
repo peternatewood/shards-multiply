@@ -21,48 +21,56 @@ var POWERUP_ICONS = [
     ['lineTo', (PLAYER_RADIUS * 1.25) * Math.cos(Math.PI * 3 / 4), (PLAYER_RADIUS * 1.25) * Math.sin(Math.PI * 3 / 4)],
     ['lineTo', -PLAYER_RADIUS, 0],
     ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(Math.PI * 3 / -4), (PLAYER_RADIUS / 2) * Math.sin(Math.PI * 3 / -4)],
-
-    ['moveTo', PLAYER_RADIUS * Math.cos(this.rad), PLAYER_RADIUS * Math.sin(this.rad)],
-    ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4)), (PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))],
-    ['lineTo', PLAYER_RADIUS * Math.cos(this.rad + (Math.PI / 2)), PLAYER_RADIUS * Math.sin(this.rad + (Math.PI / 2))],
-    ['lineTo', (PLAYER_RADIUS * 1.25) * Math.cos(this.rad + (Math.PI * 3 / 4)), (PLAYER_RADIUS * 1.25) * Math.sin(this.rad + (Math.PI * 3 / 4))],
-    ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(this.rad + Math.PI), (PLAYER_RADIUS / 2) * Math.sin(this.rad + Math.PI)],
-    ['lineTo', (PLAYER_RADIUS * 1.25) * Math.cos(this.rad - (Math.PI * 3 / 4)), (PLAYER_RADIUS * 1.25) * Math.sin(this.rad - (Math.PI * 3 / 4))],
-    ['lineTo', PLAYER_RADIUS * Math.cos(this.rad - (Math.PI / 2)), PLAYER_RADIUS * Math.sin(this.rad - (Math.PI / 2))],
-    ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(this.rad - (Math.PI / 4)), (PLAYER_RADIUS / 2) * Math.sin(this.rad - (Math.PI / 4))],
   ],
   [
-    ['moveTo', -12, -8],
-    ['lineTo',  12, -8],
-    ['lineTo', -12, -6],
-    ['lineTo', -12, -8],
-
-    ['moveTo', -12, 0],
-    ['lineTo',  12, 0],
-    ['lineTo', -12, 2],
-    ['lineTo', -12, 0],
-
-    ['moveTo', -12,  8],
-    ['lineTo',  12,  8],
-    ['lineTo', -12, 10],
-    ['lineTo', -12,  8],
+    ['moveTo',  0, -8],
+    ['lineTo',  3,  3],
+    ['lineTo',  3,  4],
+    ['lineTo',  5,  4],
+    ['lineTo',  5,  10],
+    ['lineTo',  4,  10],
+    ['lineTo',  1,  7],
+    ['lineTo', -1,  7],
+    ['lineTo', -4,  10],
+    ['lineTo', -5,  10],
+    ['lineTo', -5,  4],
+    ['lineTo', -3,  4],
+    ['lineTo', -3,  3],
   ],
   [
-    ['moveTo', -6,  -8],
-    ['lineTo', -3,  -8],
-    ['lineTo', -3, -11],
-    ['lineTo',  3, -11],
-    ['lineTo',  3,  -8],
-    ['lineTo',  6,  -8],
-    ['lineTo',  6,  11],
-    ['lineTo', -6,  11]
+    ['moveTo', -12,  12],
+    ['lineTo', -12,   6],
+    ['lineTo',   6, -12],
+    ['lineTo',  12,  -6],
+    ['lineTo', -6,   12]
+  ],
+  [
+    ['moveTo', 4, 0],
+    ['arc', 0, 0, 4, 0, 2 * Math.PI],
+
+    ['moveTo', 9, 0],
+    ['arc', 0, 0, 9, 0, 2 * Math.PI],
+
+    ['moveTo', 14, 0],
+    ['arc', 0, 0, 14, 0, 2 * Math.PI]
+  ],
+  [
+    ['moveTo', 16 * Math.cos(3 * Math.PI / 4), 16 * Math.sin(3 * Math.PI / 4)],
+    ['lineTo',  5 * Math.cos(5 * Math.PI / 4),  5 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo',  2 * Math.cos(5 * Math.PI / 4),  2 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo',  2 * Math.cos(5 * Math.PI / 4),  2 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo', 16 * Math.cos(7 * Math.PI / 4), 16 * Math.sin(7 * Math.PI / 4)],
+    ['lineTo',  5 * Math.cos(Math.PI / 4),  5 * Math.sin(Math.PI / 4)],
+    ['lineTo',  2 * Math.cos(Math.PI / 4),  2 * Math.sin(Math.PI / 4)]
   ]
 ];
 var POWERUP_COLORS = [
   ['#78C', '#FF8', '#8F8', 2],
   ['#7A4', '#49B', '#FD7', 3],
-  ['#EE2', '#A31', '#F73', 1],
-  ['#C55', '#6BC', '#356', 2]
+  ['#C55', '#CCC', '#555', 2],
+  ['#527', '#FFF', '#EA2', 2],
+  ['#C51', '#1A15', '#2E2', 1],
+  ['#EE2', '#37D', '#7AF', 1]
 ];
 
 var Powerup = function(x, y, type) {
@@ -70,10 +78,31 @@ var Powerup = function(x, y, type) {
   this.y = y;
   this.type = type;
   this.size = POWERUP_SIZE;
+  this.frame = 0;
 
   return this;
 }
 Powerup.types = ['bolt', 'clone', 'speed', 'battery'];
+Powerup.outerPath = [
+  ['moveTo', -POWERUP_SIZE, 6 - POWERUP_SIZE],
+  ['lineTo', 6 - POWERUP_SIZE, -POWERUP_SIZE],
+  ['lineTo', POWERUP_SIZE - 6, -POWERUP_SIZE],
+  ['lineTo', POWERUP_SIZE, 6 - POWERUP_SIZE],
+  ['lineTo', POWERUP_SIZE, POWERUP_SIZE - 6],
+  ['lineTo', POWERUP_SIZE - 6, POWERUP_SIZE],
+  ['lineTo', 6 - POWERUP_SIZE, POWERUP_SIZE],
+  ['lineTo', -POWERUP_SIZE, POWERUP_SIZE - 6],
+];
+Powerup.innerPath = [
+  ['moveTo', 5 - POWERUP_SIZE, 8 - POWERUP_SIZE],
+  ['lineTo', 8 - POWERUP_SIZE, 5 - POWERUP_SIZE],
+  ['lineTo', POWERUP_SIZE - 8, 5 - POWERUP_SIZE],
+  ['lineTo', POWERUP_SIZE - 5, 8 - POWERUP_SIZE],
+  ['lineTo', POWERUP_SIZE - 5, POWERUP_SIZE - 8],
+  ['lineTo', POWERUP_SIZE - 8, POWERUP_SIZE - 5],
+  ['lineTo', 8 - POWERUP_SIZE, POWERUP_SIZE - 5],
+  ['lineTo', 5 - POWERUP_SIZE, POWERUP_SIZE - 8],
+];
 Powerup.prototype.collide = function() {
   return gPlayer.x >= this.x - POWERUP_SIZE && gPlayer.y >= this.y - POWERUP_SIZE && gPlayer.x <= this.x + POWERUP_SIZE && gPlayer.y <= this.y + POWERUP_SIZE;
 }
@@ -81,44 +110,15 @@ Powerup.prototype.getType = function() {
   return Powerup.types[this.type];
 }
 Powerup.prototype.render = function() {
-  renderPath([
-    ['moveTo', -POWERUP_SIZE, 6 - POWERUP_SIZE],
-    ['lineTo', 6 - POWERUP_SIZE, -POWERUP_SIZE],
-    ['lineTo', POWERUP_SIZE - 6, -POWERUP_SIZE],
-    ['lineTo', POWERUP_SIZE, 6 - POWERUP_SIZE],
-    ['lineTo', POWERUP_SIZE, POWERUP_SIZE - 6],
-    ['lineTo', POWERUP_SIZE - 6, POWERUP_SIZE],
-    ['lineTo', 6 - POWERUP_SIZE, POWERUP_SIZE],
-    ['lineTo', -POWERUP_SIZE, POWERUP_SIZE - 6],
-  ], true, this.x - gCamera.x, this.y - gCamera.y);
+  renderPath(Powerup.outerPath, true, this.x - gCamera.x, this.y - gCamera.y);
 
-  var strokeStyle, lineWidth, fillStyle, close;
-
-  switch (this.type) {
-    case 0:
-    case 2:
-      close = false;
-      break;
-    case 1:
-    case 3:
-      close = true;
-      break;
-  }
+  var strokeStyle, lineWidth, fillStyle;
   fill(POWERUP_COLORS[this.type][0]);
   stroke('#222', 2);
-  renderPath([
-    ['moveTo', 5 - POWERUP_SIZE, 8 - POWERUP_SIZE],
-    ['lineTo', 8 - POWERUP_SIZE, 5 - POWERUP_SIZE],
-    ['lineTo', POWERUP_SIZE - 8, 5 - POWERUP_SIZE],
-    ['lineTo', POWERUP_SIZE - 5, 8 - POWERUP_SIZE],
-    ['lineTo', POWERUP_SIZE - 5, POWERUP_SIZE - 8],
-    ['lineTo', POWERUP_SIZE - 8, POWERUP_SIZE - 5],
-    ['lineTo', 8 - POWERUP_SIZE, POWERUP_SIZE - 5],
-    ['lineTo', 5 - POWERUP_SIZE, POWERUP_SIZE - 8],
-  ], true, this.x - gCamera.x, this.y - gCamera.y);
+  renderPath(Powerup.innerPath, true, this.x - gCamera.x, this.y - gCamera.y);
   stroke();
 
-  renderPath(POWERUP_ICONS[this.type], close, this.x - gCamera.x, this.y - gCamera.y);
+  renderPath(POWERUP_ICONS[this.type], true, this.x - gCamera.x, this.y - gCamera.y);
   fill(POWERUP_COLORS[this.type][1]);
   stroke(POWERUP_COLORS[this.type][2], POWERUP_COLORS[this.type][3]);
 };
