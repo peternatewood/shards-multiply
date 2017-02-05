@@ -38,7 +38,7 @@ Shard = function(x, y, type) {
   this.yVel = 0;
   this.rad = 0;
   this.type = type;
-  this.speed = Shard.speed(type);
+  this.speed = Shard.speeds[type];
   this.life = SHARD_LIFE;
   this.size = 20;
   this.projectiles = [];
@@ -47,12 +47,7 @@ Shard = function(x, y, type) {
   return this;
 }
 Shard.fireDelay = 50;
-Shard.speed = function(type) {
-  switch (type) {
-    case 0: return 3;
-    case 1: return 2;
-  }
-}
+Shard.speeds = [3, 2];
 Shard.prototype.collide = function(actor) {
   return Math.sqrt(Math.pow(actor.x - this.x, 2) + Math.pow(actor.y - this.y, 2)) < actor.size + 12;
 }
