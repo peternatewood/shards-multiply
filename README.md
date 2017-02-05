@@ -22,10 +22,12 @@ A twin-stick shoot-em-up with free-movement. Each mission is full of enemy ships
 * [ ] **Customize Ship**
 * [ ] **Multiple Missions**
 * [ ] **Powerups**
-  - [ ] Duplicate Plasma Bolts
-  - [ ] Speed Up
-  - [ ] Secondary Weapon Battery
+  - [ ] Mulitply Plasma Bolts
   - [ ] Clone Ship
+  - [ ] Missiles
+  - [ ] Laser
+  - [ ] Shield
+  - [ ] Shard Armor
 * [ ] **Missions**
   - [ ] Powerups placed throughout area
   - [ ] Unique boss per mission
