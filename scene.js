@@ -21,10 +21,12 @@ gScene = {
   targets: [],
   shards: [/**new Shard(40, 40, 0), new Shard(40, 80, 1)*/],
   powerups: [
-    new Powerup(40, 40, 0),
-    new Powerup(120, 40, 0),
-    new Powerup(40, 120, 0),
-    new Powerup(120, 120, 0)
+    new Powerup( 40,  40, 0),
+    new Powerup(120,  40, 1),
+    new Powerup(200,  40, 2),
+    new Powerup( 40, 120, 3),
+    new Powerup(120, 120, 4),
+    new Powerup(200, 120, 5)
   ],
   titleX: -812,
   titleY: 192,
@@ -426,8 +428,8 @@ gScene = {
           }
           break;
       }
-      this.powerups.forEach(function(p) { if (gCamera.isInView(p)) p.render() });
     }
+    this.powerups.forEach(function(p) { if (gCamera.isInView(p)) p.render() });
   },
   renderKey: function(command, x, y) {
     var offset = gInput.isActive(command) ? 3 : 0;
