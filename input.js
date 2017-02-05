@@ -4,13 +4,16 @@ gInput = {
   a: 0,
   d: 0,
   ' ': 0,
+  shift: 0,
   mouseL: 0,
   mouseR: 0,
   up: 'w',
   down: 's',
   left: 'a',
   right: 'd',
+  cycle: 'shift',
   fire: 'mouseL',
+  special: 'mouseR',
   thrust: ' ',
   mouseX: 0,
   mouseY: 0,
@@ -34,6 +37,7 @@ gInput = {
     this.a = 0;
     this.d = 0;
     this[' '] = 0;
+    this.shift = 0;
     this.mouseL = 0;
     this.mouseR = 0;
   },
