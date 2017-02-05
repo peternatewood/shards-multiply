@@ -83,7 +83,7 @@ var Powerup = function(x, y, type) {
   return this;
 }
 Powerup.lifetime = 18;
-Powerup.types = ['bolt', 'clone', 'speed', 'battery'];
+Powerup.types = ['bolt', 'clone', 'missile', 'beam', 'shield', 'armor'];
 Powerup.outerPath = [
   ['moveTo', -POWERUP_SIZE, 6 - POWERUP_SIZE],
   ['lineTo', 6 - POWERUP_SIZE, -POWERUP_SIZE],
