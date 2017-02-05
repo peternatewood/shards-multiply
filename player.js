@@ -95,7 +95,7 @@ gPlayer = {
               case 'speed': console.log('speed powerup'); break;
               case 'battery': console.log('battery powerup'); break;
             }
-            gScene.powerups.splice(i, 1);
+            gScene.powerups[i].frame++;
             break;
           }
         }

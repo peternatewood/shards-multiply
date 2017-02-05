@@ -429,7 +429,13 @@ gScene = {
           break;
       }
     }
-    this.powerups.forEach(function(p) { if (gCamera.isInView(p)) p.render() });
+    var powerups = [];
+    this.powerups.forEach(function(p) {
+      if (gCamera.isInView(p)) p.render()
+      if (p.frame < Powerup.lifetime) powerups.push(p);
+    });
+    this.powerups = powerups;
+    delete powerups;
   },
   renderKey: function(command, x, y) {
     var offset = gInput.isActive(command) ? 3 : 0;

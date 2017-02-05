@@ -65,12 +65,12 @@ var POWERUP_ICONS = [
   ]
 ];
 var POWERUP_COLORS = [
-  ['#78C', '#FF8', '#8F8', 2],
-  ['#7A4', '#49B', '#FD7', 3],
-  ['#C55', '#CCC', '#555', 2],
-  ['#527', '#FFF', '#EA2', 2],
-  ['#C51', '#1A15', '#2E2', 1],
-  ['#EE2', '#37D', '#7AF', 1]
+  ['#7788CC', '#FFFF88',   '#88FF88', 2],
+  ['#77AA44', '#44998B',   '#FFDD77', 3],
+  ['#CC5555', '#CCCCCC',   '#555555', 2],
+  ['#552277', '#FFFFFF',   '#EEAA22', 2],
+  ['#CC5511', '#11AA1155', '#22EE22', 1],
+  ['#EEEE22', '#3377DD',   '#77AAFF', 1]
 ];
 
 var Powerup = function(x, y, type) {
@@ -82,6 +82,7 @@ var Powerup = function(x, y, type) {
 
   return this;
 }
+Powerup.lifetime = 18;
 Powerup.types = ['bolt', 'clone', 'speed', 'battery'];
 Powerup.outerPath = [
   ['moveTo', -POWERUP_SIZE, 6 - POWERUP_SIZE],
@@ -104,21 +105,25 @@ Powerup.innerPath = [
   ['lineTo', 5 - POWERUP_SIZE, POWERUP_SIZE - 8],
 ];
 Powerup.prototype.collide = function() {
-  return gPlayer.x >= this.x - POWERUP_SIZE && gPlayer.y >= this.y - POWERUP_SIZE && gPlayer.x <= this.x + POWERUP_SIZE && gPlayer.y <= this.y + POWERUP_SIZE;
+  return this.frame == 0 && gPlayer.x >= this.x - POWERUP_SIZE && gPlayer.y >= this.y - POWERUP_SIZE && gPlayer.x <= this.x + POWERUP_SIZE && gPlayer.y <= this.y + POWERUP_SIZE;
 }
 Powerup.prototype.getType = function() {
   return Powerup.types[this.type];
 }
 Powerup.prototype.render = function() {
-  renderPath(Powerup.outerPath, true, this.x - gCamera.x, this.y - gCamera.y);
-
   var strokeStyle, lineWidth, fillStyle;
-  fill(POWERUP_COLORS[this.type][0]);
-  stroke('#222', 2);
+  var opacity = this.frame > 0 && this.frame < Powerup.lifetime ? decToHex(255 * ((Powerup.lifetime - this.frame) / Powerup.lifetime)) : 'FF';
+
+  renderPath(Powerup.outerPath, true, this.x - gCamera.x, this.y - gCamera.y);
+  fill(POWERUP_COLORS[this.type][0] + opacity);
+  stroke('#222222' + opacity, 2);
   renderPath(Powerup.innerPath, true, this.x - gCamera.x, this.y - gCamera.y);
   stroke();
 
-  renderPath(POWERUP_ICONS[this.type], true, this.x - gCamera.x, this.y - gCamera.y);
-  fill(POWERUP_COLORS[this.type][1]);
-  stroke(POWERUP_COLORS[this.type][2], POWERUP_COLORS[this.type][3]);
+  if (this.frame === 0) {
+    renderPath(POWERUP_ICONS[this.type], true, this.x - gCamera.x, this.y - gCamera.y);
+    fill(POWERUP_COLORS[this.type][1]);
+    stroke(POWERUP_COLORS[this.type][2], POWERUP_COLORS[this.type][3]);
+  }
+  else this.frame++;
 };
