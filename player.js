@@ -10,6 +10,8 @@ gPlayer = {
   firePower: 0,
   projectiles: [],
   life: PLAYER_LIFE,
+  animation: '',
+  frame: 0,
   fire: function() {
     if (this.allowFire) {
       switch (this.firePower) {
@@ -95,6 +97,8 @@ gPlayer = {
               case 'speed': console.log('speed powerup'); break;
               case 'battery': console.log('battery powerup'); break;
             }
+            this.frame++;
+            this.animation = 'powerup';
             gScene.powerups[i].frame++;
             break;
           }
@@ -137,6 +141,7 @@ gPlayer = {
   },
   render: function() {
     var opacity = decToHex(255 * (this.life / PLAYER_LIFE));
+
     renderPath([
       ['moveTo', PLAYER_RADIUS * Math.cos(this.rad), PLAYER_RADIUS * Math.sin(this.rad)],
       ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(this.rad + (Math.PI / 4)), (PLAYER_RADIUS / 2) * Math.sin(this.rad + (Math.PI / 4))],
@@ -151,6 +156,14 @@ gPlayer = {
     fill('#4499DD' + opacity);
     stroke('#FFBB77' + opacity, 3);
 
+    switch (this.animation) {
+      case 'powerup':
+        var overlay = '#FFFFFF' + decToHex(Math.min(255, 255 * ((Powerup.lifetime - this.frame) / Powerup.lifetime)));
+        fill(overlay);
+        stroke(overlay);
+        break;
+    }
+
     if (this.life < PLAYER_LIFE) {
       var radius = Math.log10(Math.max(1, 10 * (1 - (this.life / PLAYER_LIFE)))) * PLAYER_LIFE;
       renderPath([
@@ -164,6 +177,11 @@ gPlayer = {
         ['arc', 10, -6, 2 * radius / 3, 0, 2 * Math.PI],
       ], true, this.x - gCamera.x, this.y - gCamera.y);
       fill(this.life < PLAYER_LIFE / 2 ? '#CCCCCC' + decToHex(255 * (this.life / (PLAYER_LIFE / 2))) : '#EEE');
+    }
+    if (this.frame > 0 && this.frame < Powerup.lifetime) this.frame++;
+    else if (this.frame >= Powerup.lifetime) {
+      this.frame = 0;
+      this.animation = '';
     }
   }
 }
