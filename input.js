@@ -146,10 +146,10 @@ gInput = {
         path.push(['lineTo', markerSpace * special, 19]);
       }
       else {
-        path.push(['lineTo', (markerSpace * special) - 3,  5]);
-        path.push(['lineTo', markerSpace * special,  8]);
-        path.push(['lineTo', markerSpace * special, 16]);
-        path.push(['lineTo', (markerSpace * special) - 3, 19]);
+        path.push(['lineTo', 93,  5]);
+        path.push(['lineTo', 96,  8]);
+        path.push(['lineTo', 96, 16]);
+        path.push(['lineTo', 93, 19]);
       }
       path.push(['lineTo',  3, 19]);
       path.push(['lineTo',  0, 16]);
