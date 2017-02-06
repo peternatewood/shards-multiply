@@ -13,6 +13,87 @@ var LEVELS = [
 ];
 var MAX_SPECIALS = [3, 2, 4, 24, 3, 4];
 
+var POWERUP_ICONS = [
+  // Bolts
+  [
+    ['moveTo',  8, -6],
+    ['lineTo', 12, -2],
+    ['lineTo',  8,  6],
+    ['lineTo',  4, -2],
+    ['lineTo',  8, -6],
+
+    ['moveTo',  -8, -6],
+    ['lineTo',  -4, -2],
+    ['lineTo',  -8,  6],
+    ['lineTo', -12, -2],
+    ['lineTo',  -8, -6],
+  ],
+  // Clone
+  [
+    ['moveTo', 0, -PLAYER_RADIUS],
+    ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(Math.PI / -4), (PLAYER_RADIUS / 2) * Math.sin(Math.PI / -4)],
+    ['lineTo', PLAYER_RADIUS, 0],
+    ['lineTo', (PLAYER_RADIUS * 1.25) * Math.cos(Math.PI * 1 / 4), (PLAYER_RADIUS * 1.25) * Math.sin(Math.PI * 1 / 4)],
+    ['lineTo', 0, PLAYER_RADIUS / 2],
+    ['lineTo', (PLAYER_RADIUS * 1.25) * Math.cos(Math.PI * 3 / 4), (PLAYER_RADIUS * 1.25) * Math.sin(Math.PI * 3 / 4)],
+    ['lineTo', -PLAYER_RADIUS, 0],
+    ['lineTo', (PLAYER_RADIUS / 2) * Math.cos(Math.PI * 3 / -4), (PLAYER_RADIUS / 2) * Math.sin(Math.PI * 3 / -4)],
+  ],
+  // Missile
+  [
+    ['moveTo',  0, -8],
+    ['lineTo',  3,  3],
+    ['lineTo',  3,  4],
+    ['lineTo',  5,  4],
+    ['lineTo',  5, 10],
+    ['lineTo',  4, 10],
+    ['lineTo',  1,  7],
+    ['lineTo', -1,  7],
+    ['lineTo', -4, 10],
+    ['lineTo', -5, 10],
+    ['lineTo', -5,  4],
+    ['lineTo', -3,  4],
+    ['lineTo', -3,  3],
+  ],
+  // Beam
+  [
+    ['moveTo', -12,  12],
+    ['lineTo', -12,   6],
+    ['lineTo',   6, -12],
+    ['lineTo',  12,  -6],
+    ['lineTo',  -6,  12]
+  ],
+  // Shield
+  [
+    ['moveTo', 4, 0],
+    ['arc', 0, 0, 4, 0, 2 * Math.PI],
+
+    ['moveTo', 9, 0],
+    ['arc', 0, 0, 9, 0, 2 * Math.PI],
+
+    ['moveTo', 14, 0],
+    ['arc', 0, 0, 14, 0, 2 * Math.PI]
+  ],
+  // Armor
+  [
+    ['moveTo', 16 * Math.cos(3 * Math.PI / 4), 16 * Math.sin(3 * Math.PI / 4)],
+    ['lineTo',  5 * Math.cos(5 * Math.PI / 4),  5 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo',  2 * Math.cos(5 * Math.PI / 4),  2 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo',  2 * Math.cos(5 * Math.PI / 4),  2 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo', 16 * Math.cos(7 * Math.PI / 4), 16 * Math.sin(7 * Math.PI / 4)],
+    ['lineTo',  5 * Math.cos(Math.PI / 4),  5 * Math.sin(Math.PI / 4)],
+    ['lineTo',  2 * Math.cos(Math.PI / 4),  2 * Math.sin(Math.PI / 4)]
+  ]
+];
+var POWERUP_COLORS = [
+  ['#7788CC', '#FFFF88',   '#88FF88', 2], // Bolts
+  ['#77AA44', '#44998B',   '#FFDD77', 3], // Clone
+  ['#CC5555', '#CCCCCC',   '#555555', 2], // Missile
+  ['#552277', '#FFFFFF',   '#EEAA22', 2], // Beam
+  ['#CC5511', '#11AA1155', '#22EE22', 1], // Shield
+  ['#EEEE22', '#3377DD',   '#77AAFF', 1]  // Armor
+];
+
 var round = function(num, place) {
   if (isNaN(num)) return num;
   var place = place ? place : 2;
