@@ -1,3 +1,65 @@
+var HUD_MARKERS = [];
+for (var i = 1; i < MAX_SPECIALS.length; i++) {
+  var markerSpace = 96 / MAX_SPECIALS[i];
+  var path = [];
+  for (var x = markerSpace; x < 96; x += markerSpace) {
+    path.push(['moveTo', x,  5]);
+    path.push(['lineTo', x, 11]);
+  }
+  HUD_MARKERS.push(path);
+}
+var HUD_ICONS = [
+  [
+    ['moveTo', PLAYER_RADIUS / -2, 0],
+    ['lineTo', (PLAYER_RADIUS / 4) * Math.cos(Math.PI * 3 / -4), (PLAYER_RADIUS / 4) * Math.sin(Math.PI * 3 / -4)],
+    ['lineTo', 0, PLAYER_RADIUS / -2],
+    ['lineTo', (PLAYER_RADIUS * 0.512) * Math.cos(Math.PI / -4), (PLAYER_RADIUS * 0.512) * Math.sin(Math.PI / -4)],
+    ['lineTo', PLAYER_RADIUS / 4, 0],
+    ['lineTo', (PLAYER_RADIUS * 0.512) * Math.cos(Math.PI / 4), (PLAYER_RADIUS * 0.512) * Math.sin(Math.PI / 4)],
+    ['lineTo', 0, PLAYER_RADIUS / 2],
+    ['lineTo', (PLAYER_RADIUS / 4) * Math.cos(Math.PI * 3 / 4), (PLAYER_RADIUS / 4) * Math.sin(Math.PI * 3 / 4)]
+  ],
+  [
+    ['moveTo', -13,  0],
+    ['lineTo',  -2,  3],
+    ['lineTo',  -1,  3],
+    ['lineTo',  -1,  5],
+    ['lineTo',   5,  5],
+    ['lineTo',   5,  4],
+    ['lineTo',   2,  1],
+    ['lineTo',   2, -1],
+    ['lineTo',   5, -4],
+    ['lineTo',   5, -5],
+    ['lineTo',  -1, -5],
+    ['lineTo',  -1, -3],
+    ['lineTo',  -2, -3]
+  ],
+  [
+    ['moveTo', -6,  6],
+    ['lineTo', -6,  3],
+    ['lineTo',  3, -6],
+    ['lineTo',  6, -3],
+    ['lineTo', -3,  6]
+  ],
+  [
+    ['moveTo', 2, 0],
+    ['arc', 0, 0, 2, 0, 2 * Math.PI],
+    ['moveTo', 5, 0],
+    ['arc', 0, 0, 5, 0, 2 * Math.PI],
+    ['moveTo', 8, 0],
+    ['arc', 0, 0, 8, 0, 2 * Math.PI],
+  ],
+  [
+    ['moveTo', 8 * Math.cos(3 * Math.PI / 4), 8 * Math.sin(3 * Math.PI / 4)],
+    ['lineTo', 3 * Math.cos(5 * Math.PI / 4), 3 * Math.sin(5 * Math.PI / 4)],
+    ['lineTo', Math.cos(5 * Math.PI / 4), Math.sin(5 * Math.PI / 4)],
+    ['lineTo', Math.cos(5 * Math.PI / 4), Math.sin(5 * Math.PI / 4)],
+    ['lineTo', 8 * Math.cos(7 * Math.PI / 4), 8 * Math.sin(7 * Math.PI / 4)],
+    ['lineTo', 3 * Math.cos(Math.PI / 4), 3 * Math.sin(Math.PI / 4)],
+    ['lineTo', Math.cos(Math.PI / 4), Math.sin(Math.PI / 4)]
+  ]
+];
+
 gInput = {
   w: 0,
   s: 0,
@@ -55,7 +117,72 @@ gInput = {
     this.mouseX = event.layerX * (gRenderer.context.canvas.width / canvas.offsetWidth);
     this.mouseY = event.layerY * (gRenderer.context.canvas.height / canvas.offsetHeight);
   },
+  renderAmmo: function(type, x) {
+    var x = typeof x === 'number' ? x : 0;
+    var special, markers;
+    var lineWidth = type == 4 ? 1 : 2;
+    switch (type) {
+      case 1: special = gPlayer.clones.length; break;
+      case 2: special = gPlayer.missiles; break;
+      case 3: special = gPlayer.beam; break;
+      case 4: special = gPlayer.shield; break;
+      case 5: special = gPlayer.armor; break;
+    }
+    var hasWeapon = gPlayer.hasWeapon(type);
+    // Icon
+    renderPath(HUD_ICONS[type - 1], type !== 4, x, 12);
+    fill(hasWeapon ? POWERUP_COLORS[type][1] : '#CCC7');
+    stroke(hasWeapon ? POWERUP_COLORS[type][2] : '#AAA7', lineWidth);
+    x += 12;
+    // Ammo Bar
+    if (special > 0) {
+      var path = [
+        ['moveTo', 0, 8],
+        ['lineTo', 3, 5]
+      ];
+      if (special < MAX_SPECIALS[type]) {
+        var markerSpace = 96 / MAX_SPECIALS[type];
+        path.push(['lineTo', markerSpace * special,  5]);
+        path.push(['lineTo', markerSpace * special, 19]);
+      }
+      else {
+        path.push(['lineTo', (markerSpace * special) - 3,  5]);
+        path.push(['lineTo', markerSpace * special,  8]);
+        path.push(['lineTo', markerSpace * special, 16]);
+        path.push(['lineTo', (markerSpace * special) - 3, 19]);
+      }
+      path.push(['lineTo',  3, 19]);
+      path.push(['lineTo',  0, 16]);
+      renderPath(path, true, x);
+      fill(POWERUP_COLORS[type][0]);
+    }
+    // Outline
+    renderPath(HUD_MARKERS[type - 1], false, x);
+    stroke('#000', 2);
+    renderPath([
+      ['moveTo',  0,  8],
+      ['lineTo',  3,  5],
+      ['lineTo', 93,  5],
+      ['lineTo', 96,  8],
+      ['lineTo', 96, 16],
+      ['lineTo', 93, 19],
+      ['lineTo',  3, 19],
+      ['lineTo',  0, 16]
+    ], true, x);
+    stroke('#888', 4);
+    stroke('#000', 2);
+  },
   render: function() {
+    if (gScene.scene == 'hangar' || gScene.scene == 'game') {
+      fillRect(0, 0, SCREEN_WIDTH, 24, '#000');
+      // Ammo Bars
+      this.renderAmmo(1,  24); // Clone Ammo
+      this.renderAmmo(2, 168); // Missile Ammo
+      this.renderAmmo(3, 312); // Beam Ammo
+      this.renderAmmo(4, 456); // Shield Ammo
+      this.renderAmmo(5, 600); // Armor Ammo
+    }
+    // Mouse cursor
     var rad = this.rotateCursor ? this.rad : gPlayer.rad + Math.PI;
     if (this.rotateCursor) this.rad += Math.PI / 512;
 
