@@ -92,6 +92,8 @@ gInput = {
     var key = key.toLowerCase();
     this[key] = 1;
     if (this.thrust == key) gPlayer.speed = THRUSTER_SPEED;
+
+    this.update();
   },
   release: function(key) {
     var key = key.toLowerCase();
@@ -111,6 +113,8 @@ gInput = {
   mousedown: function(event) {
     if (event.button === 0) this.mouseL = 1;
     else if (event.button === 2) this.mouseR = 1;
+
+    this.update();
   },
   mouseup: function(event) {
     if (event.button === 0) this.mouseL = 0;
@@ -121,6 +125,9 @@ gInput = {
   setMousePos: function(event) {
     this.mouseX = event.layerX * (gRenderer.context.canvas.width / canvas.offsetWidth);
     this.mouseY = event.layerY * (gRenderer.context.canvas.height / canvas.offsetHeight);
+  },
+  update: function() {
+    if (this.isActive('cycle')) gPlayer.cycleSpecial();
   },
   renderAmmo: function(type, x) {
     var x = typeof x === 'number' ? x : 0;
