@@ -117,6 +117,7 @@ gPlayer = {
                 break;
               case 'missile':
                 this.hasMissiles = true;
+                this.missiles = MAX_SPECIALS[gScene.powerups[i].type];
                 break;
               case 'beam':
                 this.hasBeam = true;
