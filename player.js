@@ -112,11 +112,21 @@ gPlayer = {
           if (gScene.powerups[i].collide()) {
             switch (gScene.powerups[i].getType()) {
               case 'bolt': if (this.firePower < 2) this.firePower++; break;
-              case 'clone': break;
-              case 'missile': break;
-              case 'beam': break;
-              case 'shield': break;
-              case 'armor': break;
+              case 'clone':
+                this.hasClones = true;
+                break;
+              case 'missile':
+                this.hasMissiles = true;
+                break;
+              case 'beam':
+                this.hasBeam = true;
+                break;
+              case 'shield':
+                this.hasShield = true;
+                break;
+              case 'armor':
+                this.hasArmor = true;
+                break;
             }
             this.frame++;
             this.animation = 'powerup';
