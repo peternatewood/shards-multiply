@@ -32,6 +32,13 @@ gPlayer = {
       case 5: return this.hasArmor;
     }
   },
+  cycleSpecial: function() {
+    var special = Math.max(1, (this.special + 1) % 6);
+    for (var i = 0; !this.hasWeapon(special) && i < 6; i++) {
+      special = Math.max(1, (special + 1) % 6);
+    }
+    this.special = this.hasWeapon(special) ? special : 0;
+  },
   fire: function() {
     if (this.allowFire) {
       switch (this.firePower) {
