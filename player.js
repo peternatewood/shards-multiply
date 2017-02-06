@@ -22,6 +22,7 @@ gPlayer = {
   shield: 0,
   hasArmor: false,
   armor: 0,
+  special: 0,
   hasWeapon: function(type) {
     switch (type) {
       case 1: return this.hasClones;

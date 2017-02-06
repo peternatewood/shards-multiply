@@ -9,6 +9,7 @@ for (var i = 1; i < MAX_SPECIALS.length; i++) {
   HUD_MARKERS.push(path);
 }
 var HUD_ICONS = [
+  // Clone
   [
     ['moveTo', PLAYER_RADIUS / -2, 0],
     ['lineTo', (PLAYER_RADIUS / 4) * Math.cos(Math.PI * 3 / -4), (PLAYER_RADIUS / 4) * Math.sin(Math.PI * 3 / -4)],
@@ -19,6 +20,7 @@ var HUD_ICONS = [
     ['lineTo', 0, PLAYER_RADIUS / 2],
     ['lineTo', (PLAYER_RADIUS / 4) * Math.cos(Math.PI * 3 / 4), (PLAYER_RADIUS / 4) * Math.sin(Math.PI * 3 / 4)]
   ],
+  // Missile
   [
     ['moveTo', -13,  0],
     ['lineTo',  -2,  3],
@@ -34,6 +36,7 @@ var HUD_ICONS = [
     ['lineTo',  -1, -3],
     ['lineTo',  -2, -3]
   ],
+  // Beam
   [
     ['moveTo', -6,  6],
     ['lineTo', -6,  3],
@@ -41,6 +44,7 @@ var HUD_ICONS = [
     ['lineTo',  6, -3],
     ['lineTo', -3,  6]
   ],
+  // Shield
   [
     ['moveTo', 2, 0],
     ['arc', 0, 0, 2, 0, 2 * Math.PI],
@@ -49,6 +53,7 @@ var HUD_ICONS = [
     ['moveTo', 8, 0],
     ['arc', 0, 0, 8, 0, 2 * Math.PI],
   ],
+  // Armor
   [
     ['moveTo', 8 * Math.cos(3 * Math.PI / 4), 8 * Math.sin(3 * Math.PI / 4)],
     ['lineTo', 3 * Math.cos(5 * Math.PI / 4), 3 * Math.sin(5 * Math.PI / 4)],
@@ -169,7 +174,7 @@ gInput = {
       ['lineTo',  3, 19],
       ['lineTo',  0, 16]
     ], true, x);
-    stroke('#888', 4);
+    stroke(gPlayer.special == type ? '#FFF' : '#888', 4);
     stroke('#000', 2);
   },
   render: function() {
