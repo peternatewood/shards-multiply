@@ -12,6 +12,25 @@ gPlayer = {
   life: PLAYER_LIFE,
   animation: '',
   frame: 0,
+  hasClones: false,
+  clones: [],
+  hasMissiles: false,
+  missiles: 0,
+  hasBeam: false,
+  beam: 0,
+  hasShield: false,
+  shield: 0,
+  hasArmor: false,
+  armor: 0,
+  hasWeapon: function(type) {
+    switch (type) {
+      case 1: return this.hasClones;
+      case 2: return this.hasMissiles;
+      case 3: return this.hasBeam;
+      case 4: return this.hasShield;
+      case 5: return this.hasArmor;
+    }
+  },
   fire: function() {
     if (this.allowFire) {
       switch (this.firePower) {
@@ -93,9 +112,11 @@ gPlayer = {
           if (gScene.powerups[i].collide()) {
             switch (gScene.powerups[i].getType()) {
               case 'bolt': if (this.firePower < 2) this.firePower++; break;
-              case 'clone': console.log('clone powerup'); break;
-              case 'speed': console.log('speed powerup'); break;
-              case 'battery': console.log('battery powerup'); break;
+              case 'clone': break;
+              case 'missile': break;
+              case 'beam': break;
+              case 'shield': break;
+              case 'armor': break;
             }
             this.frame++;
             this.animation = 'powerup';
