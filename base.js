@@ -11,6 +11,7 @@ var LEVELS = [
   { l: 0, t: 0, r: 704, b: 552 },
   { l: 0, t: 0, r: 2000, b: 2000 }
 ];
+var MAX_SPECIALS = [3, 2, 4, 24, 3, 4];
 
 var round = function(num, place) {
   if (isNaN(num)) return num;
