@@ -29,18 +29,28 @@ var decToHex = function(dec) {
 
 var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText, createLinearGradient;
 (function(context) {
-  renderPath = function(pathPoints, close, xOff, yOff) {
+  renderPath = function(pathPoints, close, xOff, yOff, rad) {
     var xOff = typeof xOff === 'number' ? xOff : 0;
     var yOff = typeof yOff === 'number' ? yOff : 0;
     context.beginPath();
     pathPoints.forEach(function(p) {
-      switch(p[0]) {
-        case 'moveTo' : context.moveTo(p[1] + xOff, p[2] + yOff);
-          break;
-        case 'lineTo' : context.lineTo(p[1] + xOff, p[2] + yOff);
-          break;
-        case 'arc'  : context.arc(p[1] + xOff, p[2] + yOff, p[3], p[4], p[5]);
-          break;
+      if (typeof rad === 'number') {
+        switch(p[0]) {
+          case 'moveTo': context.moveTo(xOff + (p[1] * Math.cos(rad)) - (p[2] * Math.sin(rad)), yOff + (p[2] * Math.cos(rad)) + (p[1] * Math.sin(rad)));
+            break;
+          case 'lineTo': context.lineTo(xOff + (p[1] * Math.cos(rad)) - (p[2] * Math.sin(rad)), yOff + (p[2] * Math.cos(rad)) + (p[1] * Math.sin(rad)));
+            break;
+        }
+      }
+      else {
+        switch(p[0]) {
+          case 'moveTo' : context.moveTo(p[1] + xOff, p[2] + yOff);
+            break;
+          case 'lineTo' : context.lineTo(p[1] + xOff, p[2] + yOff);
+            break;
+          case 'arc'  : context.arc(p[1] + xOff, p[2] + yOff, p[3], p[4], p[5]);
+            break;
+        }
       }
     });
 
@@ -105,5 +115,6 @@ var gCamera = {}
 
 var Target = function() { return this }
 var Bolt = function() { return this }
+var Missile = function() { return this }
 var AudioChannel = function() { return this }
 var Powerup = function() { return this }
