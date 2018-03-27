@@ -541,6 +541,25 @@ struct Actor {
   SDL_Point points[MAX_RENDER_POINTS];
 };
 
+#define POWERUP_POINTS_COUNT 9
+const SDL_Point POWERUP_POINTS[POWERUP_POINTS_COUNT] = {
+  {  0, 6 },
+  {  6, 0 },
+  { 18, 0 },
+  { 24, 6 },
+  { 24,18 },
+  { 18,24 },
+  {  6,24 },
+  {  0,18 },
+  {  0, 6 }
+};
+// Types: bolt, missile, laser, satellite, shield
+struct Powerup {
+  int x, y;
+  unsigned char type;
+  SDL_Point points[POWERUP_POINTS_COUNT];
+};
+
 void fillPolygon(SDL_Renderer* renderer, SDL_Point* points, unsigned int length) {
   unsigned int xMin = WINDOW_W;
   unsigned int xMax = 0;
@@ -581,6 +600,9 @@ void updateRenderPoints(struct Actor *actor, SDL_Point* points, unsigned int len
     actor->points[i].x = actor->x + x * actorCos + y * actorSin - camera[0];
     actor->points[i].y = actor->y + x * actorSin - y * actorCos - camera[1];
   }
+}
+// Update powerup's render points
+void updatePowerupPoints(struct Powerup *powerup, SDL_Point* points, unsigned int length) {
 }
 
 void setPaletteColor(int *renderer, int paletteNumber) {
@@ -699,6 +721,15 @@ int main() {
         // Reuseable rect for rendering level tiles
         SDL_Rect levelTile = { 0, 0, TILE_SIZE, TILE_SIZE };
         const SDL_Rect UI_RECT = { 0, 0, WINDOW_W, UI_HEIGHT };
+
+        #define POWERUP_COUNT 5
+        struct Powerup powerups[POWERUP_COUNT] = {
+          {  512, 256, 0 },
+          {  256, 512, 1 },
+          { 1024, 512, 2 },
+          {  640, 768, 3 },
+          { 1280,1984, 4 }
+        };
 
         // Shards
         struct Actor lightning  = { 256.f, 128.f, 0.f, 0.f, PLAYER_SPEED / 2, 100, 0, 0, 0 };
@@ -931,6 +962,18 @@ int main() {
 
                   SDL_RenderFillRect(gRenderer, &levelTile);
                 }
+              }
+
+              // Draw powerups
+              for (unsigned char i = 0; i < POWERUP_COUNT; i++) {
+                for (unsigned char p = 0; p < POWERUP_POINTS_COUNT; p++) {
+                  powerups[i].points[p].x = powerups[i].x + POWERUP_POINTS[p].x - camera[0];
+                  powerups[i].points[p].y = powerups[i].y + POWERUP_POINTS[p].y - camera[1];
+                }
+                setPaletteColor(gRenderer, powerups[i].type);
+                fillPolygon(gRenderer, &powerups[i].points, POWERUP_POINTS_COUNT);
+                SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawLines(gRenderer, &powerups[i].points, POWERUP_POINTS_COUNT);
               }
 
               // Update and draw shards
