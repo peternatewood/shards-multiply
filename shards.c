@@ -38,26 +38,8 @@ Shard Vessels:
 
 SDL_Window* gWindow;
 SDL_Renderer* gRenderer;
-// Initialize SDL, and create window and renderer. Returns whether all this was successful or not
-bool init() {
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-  else {
-    gWindow = SDL_CreateWindow("Shards", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_W, WINDOW_H, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-
-    if (gWindow == NULL) printf("Window creation failed! SDL Error: %s\n", SDL_GetError());
-    else {
-      gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-      if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
-      else if (SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND) < 0) printf("Failed to set render draw blend mode! SDL Error: %s\n", SDL_GetError());
-      else {
-        return true;
-      }
-    }
-  }
-
-  return false;
-}
-
+SDL_Texture* charset;
+// Load a texture from an image file at the path provided
 SDL_Texture* loadTexture(char path[]) {
   // The final texture
   SDL_Texture* newTexture = NULL;
@@ -65,7 +47,7 @@ SDL_Texture* loadTexture(char path[]) {
   SDL_Surface* loadedSurface = IMG_Load(path);
   if (loadedSurface == NULL) printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
   else {
-    // Don't use color keying if the source has a transparency layer already
+    // Don't use color keying if the source has a transparency layer already (.png, or .tga extension)
     // SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0x00, 0xFF, 0xFF));
     // Create texture from surface pixels
     newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
@@ -76,7 +58,29 @@ SDL_Texture* loadTexture(char path[]) {
   return newTexture;
 }
 
-SDL_Texture* charset = NULL;
+// Initialize SDL, and create window and renderer. Returns whether all this was successful or not
+bool init() {
+  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+  else {
+    gWindow = SDL_CreateWindow("Shards", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_W, WINDOW_H, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+
+    if (gWindow == NULL) printf("Window creation failed! SDL Error: %s\n", SDL_GetError());
+    else {
+      gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+      if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
+      else {
+        if (SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND) < 0) printf("Failed to set render draw blend mode! SDL Error: %s\n", SDL_GetError());
+        else {
+          charset = loadTexture("charset.png");
+          return charset != NULL;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 // Clip charset image for each character and render
 void renderText(SDL_Renderer* renderer, char string[], unsigned int length, int x, int y) {
   SDL_Rect source = { 0, 0, 8, 8 };
@@ -134,7 +138,6 @@ void updatePowerupPoints(struct Powerup *powerup, SDL_Point* points, unsigned in
 
 int main() {
   if (init()) {
-    charset = loadTexture("charset.png");
     // Hide the mouse cursor
     if (SDL_ShowCursor(SDL_DISABLE) < 0) printf("Failed to hide system cursor. SDL Error: %s\n", SDL_GetError());
 
@@ -151,13 +154,24 @@ int main() {
     setTitlePoints();
 
     bool thrustMode = false;
+    // int weaponMode = 0;
+    enum Mode weaponMode = BOLT;
     struct Actor player = { 100.f, 100.f, 0.f, 0.f, PLAYER_SPEED, 100, 0, 0, 0 };
     SDL_Point mouse = { 0, 0 };
+    // x, y
+    #define STARS_COUNT 64
+    int starStreams[2 * STARS_COUNT];
+    for (char i = 0; i < STARS_COUNT; i++) {
+      starStreams[2 * i]      = rand() % WINDOW_W; // x position
+      starStreams[2 * i + 1]  = rand() % WINDOW_H; // y position
+    }
     // Visual reticule
     int reticule[2] = { 0, 0 };
     // Reuseable rect for rendering level tiles
     SDL_Rect levelTile = { 0, 0, TILE_SIZE, TILE_SIZE };
     const SDL_Rect UI_RECT = { 0, 0, WINDOW_W, UI_HEIGHT };
+
+    SDL_Point laserPoints[5];
 
     #define POWERUP_COUNT 5
     struct Powerup powerups[POWERUP_COUNT] = {
@@ -201,10 +215,25 @@ int main() {
       { -1.f, -1.f, 0.f, 0.f, 0, 0 },
       { -1.f, -1.f, 0.f, 0.f, 0, 0 }
     };
+    struct Actor missiles[10] = {
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 },
+      { -1.f, -1.f, 0.f, 0.f, 0, 0 }
+    };
     int boltIndex = 0;
+    int missileIndex = 0;
     int fireDelay = 0;
 
     while (isRunning) {
+      // Background color
+      SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
       SDL_RenderClear(gRenderer);
 
       while (SDL_PollEvent(&event) != 0) {
@@ -221,6 +250,10 @@ int main() {
             case SDLK_a: player.xAcc -= 1; break;
             case SDLK_d: player.xAcc += 1; break;
             case SDLK_SPACE: thrustMode = true; break;
+            case SDLK_LSHIFT:
+              weaponMode++;
+              if (weaponMode == LAST) weaponMode = BOLT;
+              break;
           }
         }
         else if (event.type == SDL_KEYUP) {
@@ -259,9 +292,6 @@ int main() {
 
       switch (scene) {
         case TITLE:
-          SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
-          SDL_RenderFillRect(gRenderer, NULL);
-
           updateTitlePoints();
           // Render title
           for (unsigned short i = 0; i < TITLE_LENGTH; i++) {
@@ -271,78 +301,36 @@ int main() {
             SDL_RenderDrawLines(gRenderer, &titlePoints[i], TITLE_CHAR_COUNTS[i]);
           }
           // Render start flash
-          if (titleX >= 64 && frames % 40 < 24) {
+          if (titleX >= 64 && frames % 36 < 18) {
             renderText(gRenderer, "Press any key to start", 22, WINDOW_W / 2 - 176, 440);
           }
           break;
         case GAME:
-          if (shouldFireBolts && fireDelay == 0) {
-            fireBolt(&player, &projectiles, boltIndex);
-            boltIndex = (boltIndex + 1) % 10;
-            fireDelay = 6;
+          switch (weaponMode) {
+            case BOLT:
+              if (shouldFireBolts && fireDelay == 0) {
+                fireBolt(&player, &projectiles, boltIndex);
+                boltIndex++;
+                if (boltIndex >= 10) boltIndex = 0;
+                fireDelay = 6;
+              }
+              else if (fireDelay > 0) fireDelay--;
+              break;
+            case MISSILE:
+              if (shouldFireBolts && fireDelay == 0) {
+                fireBolt(&player, &missiles, missileIndex);
+                missileIndex++;
+                if (missileIndex >= 10) missileIndex = 0;
+                fireDelay = 12;
+              }
+              else if (fireDelay > 0) fireDelay--;
+              break;
+            case LASER:
+              break;
           }
-          else if (fireDelay > 0) fireDelay--;
 
-          if (thrustMode) {
-            // // TODO: Stop jittering zigzags if the player nears a level boundary. Maybe loop levels?
-            // player.xVel = THRUST_SPEED * cos(player.r);
-            // player.yVel = THRUST_SPEED * sin(player.r);
-            // // Update camera position
-            // int camX = camera[0] + player.speed * player.xVel;
-            // int centerXDist = (player.x - WINDOW_W / 2) - camX;
-            // if (camX != centerXDist) {
-            //   if (centerXDist > -THRUST_SPEED && centerXDist < THRUST_SPEED) {
-            //     camX = player.x - WINDOW_W / 2;
-            //   }
-            //   else {
-            //     camX += centerXDist > 0 ? THRUST_SPEED : -THRUST_SPEED;
-            //   }
-            // }
-            // // int camX = player.x - WINDOW_W / 2;
-            // if (camX < 0) {
-            //   camX = 0;
-            // }
-            // else if (camX > LEVEL_SIZE - WINDOW_W) {
-            //   camX = LEVEL_SIZE - WINDOW_W;
-            // }
-            // camera[0] = camX;
-
-            // int camY = camera[1] + player.speed * player.yVel;
-            // int centerYDist = (player.y - WINDOW_H / 2) - camY;
-            // if (camY != centerYDist) {
-            //   if (centerYDist > -THRUST_SPEED && centerXDist < THRUST_SPEED) {
-            //     camY = player.y - WINDOW_H / 2;
-            //   }
-            //   else {
-            //     camY += centerYDist > 0 ? THRUST_SPEED : -THRUST_SPEED;
-            //   }
-            // }
-            // // int camY = player.y - WINDOW_H / 2;
-            // if (camY < 0) {
-            //   camY = 0;
-            // }
-            // else if (camY > LEVEL_SIZE - WINDOW_H) {
-            //   camY = LEVEL_SIZE - WINDOW_H;
-            // }
-            // camera[1] = camY;
-          }
-          else {
-            updateActorVelocity(&player);
-          }
+          updateActorVelocity(&player);
           moveActor(&player);
-          // if (player.x < 0) {
-          //   player.x = 0;
-          // }
-          // else if (player.x > LEVEL_SIZE) {
-          //   player.x = LEVEL_SIZE;
-          // }
-
-          // if (player.y < 0) {
-          //   player.y = 0;
-          // }
-          // else if (player.y > LEVEL_SIZE) {
-          //   player.y = LEVEL_SIZE;
-          // }
 
           // Restrict player to camera space
           if (player.x < camera[0] + UI_HEIGHT) {
@@ -357,60 +345,76 @@ int main() {
           else if (player.y > camera[1] + WINDOW_H) {
             player.y = camera[1] + WINDOW_H;
           }
-          player.r = atan2(mouse.y - (player.y - camera[1]), mouse.x - (player.x - camera[0]));
+          if (!thrustMode) {
+            player.r = atan2(mouse.y - (player.y - camera[1]), mouse.x - (player.x - camera[0]));
+          }
           updateRenderPoints(&player, PLAYER_POINTS, PLAYER_POINTS_COUNT);
 
-          // Background color
-          SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
-          SDL_RenderFillRect(gRenderer, NULL);
+          if (thrustMode) {
+            // Render star streams
+            SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, SDL_ALPHA_OPAQUE);
+            float xVel = cos(player.r);
+            float yVel = sin(player.r);
+            for (char i = 0; i < STARS_COUNT; i++) {
+              starStreams[2 * i]     -= 32 * xVel;
+              starStreams[2 * i + 1] -= 32 * yVel;
 
-          // TODO: Render background tiles
-          int tileX, tileY;
-          for (int i = 0; i < LEVEL_RECTS_COUNT; i++) {
-            setPaletteColor(gRenderer, LEVEL_SOURCE[i]);
-            // SDL_RenderFillRect(gRenderer, &levelRects[i]);
-            tileX = TILE_SIZE * (i % TILES_PER_ROW) - camera[0];
-            tileY = TILE_SIZE * (i / TILES_PER_ROW) - camera[1];
-            // If the tile is on screen
-            if (tileX > -TILE_SIZE && tileX < WINDOW_W && tileY > -TILE_SIZE && tileY < WINDOW_H) {
-              if (tileX < 0) {
-                levelTile.w = TILE_SIZE + tileX;
-                tileX = 0;
-              }
-              else if (tileX > WINDOW_W - TILE_SIZE) {
-                levelTile.w = WINDOW_W - tileX;
-              }
-              else if (levelTile.w != TILE_SIZE) {
-                levelTile.w = TILE_SIZE;
-              }
-              levelTile.x = tileX;
+              if (starStreams[2 * i] < 0)             starStreams[2 * i] += WINDOW_W;
+              else if (starStreams[2 * i] > WINDOW_W) starStreams[2 * i] -= WINDOW_W;
 
-              if (tileY < UI_HEIGHT) {
-                levelTile.h = TILE_SIZE + tileY;
-                tileY = UI_HEIGHT;
-              }
-              else if (tileY > WINDOW_H - TILE_SIZE) {
-                levelTile.h = WINDOW_H - tileY;
-              }
-              else if (levelTile.h != TILE_SIZE) {
-                levelTile.h = TILE_SIZE;
-              }
-              levelTile.y = tileY;
+              if (starStreams[2 * i + 1] < 0)             starStreams[2 * i + 1] += WINDOW_H;
+              else if (starStreams[2 * i + 1] > WINDOW_H) starStreams[2 * i + 1] -= WINDOW_H;
 
-              SDL_RenderFillRect(gRenderer, &levelTile);
+              SDL_RenderDrawLine(gRenderer, starStreams[2 * i], starStreams[2 * i + 1], starStreams[2 * i] - 32 * xVel, starStreams[2 * i + 1] - 32 * yVel);
             }
           }
+          else {
+            int tileX, tileY;
+            for (int i = 0; i < LEVEL_RECTS_COUNT; i++) {
+              setPaletteColor(gRenderer, LEVEL_SOURCE[i]);
+              tileX = TILE_SIZE * (i % TILES_PER_ROW) - camera[0];
+              tileY = TILE_SIZE * (i / TILES_PER_ROW) - camera[1];
+              // If the tile is on screen
+              if (tileX > -TILE_SIZE && tileX < WINDOW_W && tileY > -TILE_SIZE && tileY < WINDOW_H) {
+                if (tileX < 0) {
+                  levelTile.w = TILE_SIZE + tileX;
+                  tileX = 0;
+                }
+                else if (tileX > WINDOW_W - TILE_SIZE) {
+                  levelTile.w = WINDOW_W - tileX;
+                }
+                else if (levelTile.w != TILE_SIZE) {
+                  levelTile.w = TILE_SIZE;
+                }
+                levelTile.x = tileX;
 
-          // Draw powerups
-          for (unsigned char i = 0; i < POWERUP_COUNT; i++) {
-            for (unsigned char p = 0; p < POWERUP_POINTS_COUNT; p++) {
-              powerups[i].points[p].x = powerups[i].x + POWERUP_POINTS[p].x - camera[0];
-              powerups[i].points[p].y = powerups[i].y + POWERUP_POINTS[p].y - camera[1];
+                if (tileY < UI_HEIGHT) {
+                  levelTile.h = TILE_SIZE + tileY;
+                  tileY = UI_HEIGHT;
+                }
+                else if (tileY > WINDOW_H - TILE_SIZE) {
+                  levelTile.h = WINDOW_H - tileY;
+                }
+                else if (levelTile.h != TILE_SIZE) {
+                  levelTile.h = TILE_SIZE;
+                }
+                levelTile.y = tileY;
+
+                SDL_RenderFillRect(gRenderer, &levelTile);
+              }
             }
-            setPaletteColor(gRenderer, powerups[i].type);
-            fillPolygon(gRenderer, &powerups[i].points, POWERUP_POINTS_COUNT);
-            SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
-            SDL_RenderDrawLines(gRenderer, &powerups[i].points, POWERUP_POINTS_COUNT);
+
+            // Draw powerups
+            for (unsigned char i = 0; i < POWERUP_COUNT; i++) {
+              for (unsigned char p = 0; p < POWERUP_POINTS_COUNT; p++) {
+                powerups[i].points[p].x = powerups[i].x + POWERUP_POINTS[p].x - camera[0];
+                powerups[i].points[p].y = powerups[i].y + POWERUP_POINTS[p].y - camera[1];
+              }
+              setPaletteColor(gRenderer, powerups[i].type);
+              fillPolygon(gRenderer, &powerups[i].points, POWERUP_POINTS_COUNT);
+              SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
+              SDL_RenderDrawLines(gRenderer, &powerups[i].points, POWERUP_POINTS_COUNT);
+            }
           }
 
           // Update and draw shards
@@ -434,26 +438,19 @@ int main() {
             if (withinDistance(defender, player, 128)) {
               playerXDist = defender.x - player.x;
               playerYDist = defender.y - player.y;
-              // defender.xAcc = playerXDist > MAX_SPEED ? 1 : -1;
-              // defender.yAcc = playerYDist > MAX_SPEED ? 1 : -1;
               defender.xVel = MAX_SPEED * (playerXDist > 0 ? 1 : -1);
               defender.yVel = MAX_SPEED * (playerYDist > 0 ? 1 : -1);
             }
             else if (withoutDistance(defender, player, 256)) {
               playerXDist = defender.x - player.x;
               playerYDist = defender.y - player.y;
-              // defender.xAcc = playerXDist > MAX_SPEED ? -1 : 1;
-              // defender.yAcc = playerYDist > MAX_SPEED ? -1 : 1;
               defender.xVel = MAX_SPEED * (playerXDist > 0 ? -1 : 1);
               defender.yVel = MAX_SPEED * (playerYDist > 0 ? -1 : 1);
             }
             else {
-              // defender.xAcc = 0;
-              // defender.yAcc = 0;
               defender.xVel = 0;
               defender.yVel = 0;
             }
-            // updateActorVelocity(&defender);
             moveActor(&defender);
           }
 
@@ -530,7 +527,39 @@ int main() {
                 }
               }
             }
+            // Missile
+            if (&missiles[i] != NULL && missiles[i].life > 0) {
+              missiles[i].life--;
+              moveActor(&missiles[i]);
+              if (outsideBounds(missiles[i])) missiles[i].life = 0;
+              else {
+                updateRenderPoints(&missiles[i], MISSILE_POINTS, MISSILE_POINTS_COUNT);
+                setPaletteColor(gRenderer, 1);
+                fillPolygon(gRenderer, &missiles[i].points, MISSILE_POINTS_COUNT);
+
+                setPaletteColor(gRenderer, 0);
+                SDL_RenderDrawLines(gRenderer, &missiles[i].points, MISSILE_POINTS_COUNT);
+                // Collisions
+                if (withinDistance(missiles[i], lightning, 16)) {
+                  missiles[i].life = 0;
+                  lightning.life = 0;
+                }
+              }
+            }
           }
+
+          // TODO: Draw laser
+          // if (weaponMode == LASER) {
+          //   float pSin = sin(player.r);
+          //   float pCos = cos(player.r);
+
+          //   // laserPoints[0].x = player.x + 6 * pCos;
+          //   // laserPoints[0].y = player.y + 6 * pSin;
+          //   // laserPoints[1].x =
+          //   setPaletteColor(gRenderer, 1);
+
+          //   setPaletteColor(gRenderer, 7);
+          // }
 
           // Draw player
           setPaletteColor(gRenderer, 4);
@@ -577,7 +606,12 @@ int main() {
 
           SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
           SDL_RenderFillRect(gRenderer, &UI_RECT);
-          renderText(gRenderer, "Lives", 5, 0, 0);
+          renderText(gRenderer, "Weapon:", 7, 0, 0);
+          switch (weaponMode) {
+            case BOLT: renderText(gRenderer, "Bolts", 5, 128, 0); break;
+            case MISSILE: renderText(gRenderer, "Missiles", 8, 128, 0); break;
+            case LASER: renderText(gRenderer, "Laser", 5, 128, 0); break;
+          }
           break;
       }
 
