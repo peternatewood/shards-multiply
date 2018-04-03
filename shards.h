@@ -265,6 +265,15 @@ const SDL_Point BOLT_POINTS[BOLT_POINTS_COUNT] = {
   { 4, 0 }
 };
 
+#define MISSILE_POINTS_COUNT 5
+const SDL_Point MISSILE_POINTS[MISSILE_POINTS_COUNT] = {
+  { 8, 0 },
+  {-8, 4 },
+  {-4, 0 },
+  {-8,-4 },
+  { 8, 0 }
+};
+
 // x1, y1, x2, y2
 #define RETICULE_LINES_COUNT 8
 const signed char RETICULE_LINES[4 * RETICULE_LINES_COUNT] = {
@@ -394,6 +403,13 @@ struct Timer {
 enum Scene {
   TITLE,
   GAME
+};
+
+enum Mode {
+  BOLT,
+  MISSILE,
+  LASER,
+  LAST
 };
 
 #define MAX_RENDER_POINTS 32
