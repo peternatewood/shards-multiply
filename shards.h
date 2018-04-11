@@ -3,12 +3,13 @@
   preprocessor defines
 */
 
-#include <SDL2/SDL.h>
-#include <SDL2_image/SDL_Image.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <time.h>
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_Image.h>
+#include <SDL2_mixer/SDL_Mixer.h>
 
 #define WINDOW_W 800
 #define WINDOW_H 600
@@ -16,6 +17,13 @@
 #define LEVEL_SIZE 2048
 #define TILES_PER_ROW 32
 #define UI_HEIGHT 16
+
+#define SAMPLE_RATE 44100
+#define CHANNELS 2
+#define LATENCY 2048
+
+#define THRUST_MUSIC "thrust.wav"
+#define CHANGE_SOUND "change.wav"
 
 #define TICKS_PER_FRAME 1000.f / 60.f
 #define MAX_SPEED 2
