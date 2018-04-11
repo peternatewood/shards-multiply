@@ -546,10 +546,10 @@ bool isPointInPolygon(float x, float y, SDL_Point* points, int numOfCorners) {
 }
 // Fill every point that falls inside a closed polygon as defined by SDL_Points
 void fillPolygon(SDL_Renderer* renderer, SDL_Point* points, unsigned int length) {
-  unsigned int xMin = WINDOW_W;
-  unsigned int xMax = 0;
-  unsigned int yMin = WINDOW_H;
-  unsigned int yMax = 0;
+  int xMin = WINDOW_W;
+  int xMax = 0;
+  int yMin = WINDOW_H;
+  int yMax = 0;
 
   // Set min and max for both dimensions
   for (unsigned int i = 0; i < length; i++) {
