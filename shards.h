@@ -22,8 +22,14 @@
 #define CHANNELS 2
 #define LATENCY 2048
 
-#define THRUST_MUSIC "thrust.wav"
-#define CHANGE_SOUND "change.wav"
+#define BATTLE_MUSIC "M1_bttl1.wav"
+
+#define SHIP_SOUND "ship_a1.wav"
+#define THRUST_SOUND "Subspace_Left.wav"
+#define CHANGE_SOUND "cycle.wav"
+#define BOLT_SOUND "l_avenge.wav"
+#define MISSILE_SOUND "m_fury.wav"
+#define LASER_SOUND "ship_c1.wav"
 
 #define TICKS_PER_FRAME 1000.f / 60.f
 #define MAX_SPEED 2
