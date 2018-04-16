@@ -1,6 +1,8 @@
 /* Development build; alter error messages for production release */
 
 /*
+Movement:
+  + On reaching level border, loop around to other side
 Visuals:
   + Add thruster visuals for player movement
 Health and Damage:
@@ -58,27 +60,87 @@ SDL_Texture* loadTexture(char path[]) {
   return newTexture;
 }
 
+Mix_Chunk* gBattleMusic = NULL;
+Mix_Chunk* gShipSound = NULL;
+Mix_Chunk* gThrustSound = NULL;
+Mix_Chunk* gStart = NULL;
+Mix_Chunk* gBoltSound = NULL;
+Mix_Chunk* gMissileSound = NULL;
+Mix_Chunk* gLaserSound = NULL;
+
 // Initialize SDL, and create window and renderer. Returns whether all this was successful or not
 bool init() {
-  if (SDL_Init(SDL_INIT_EVERYTHING) < 0) printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
-  else {
-    gWindow = SDL_CreateWindow("Shards", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_W, WINDOW_H, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-
-    if (gWindow == NULL) printf("Window creation failed! SDL Error: %s\n", SDL_GetError());
-    else {
-      gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-      if (gRenderer == NULL) printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
-      else {
-        if (SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND) < 0) printf("Failed to set render draw blend mode! SDL Error: %s\n", SDL_GetError());
-        else {
-          charset = loadTexture("charset.png");
-          return charset != NULL;
-        }
-      }
-    }
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
+    return false;
   }
 
-  return false;
+  if (Mix_OpenAudio(SAMPLE_RATE, MIX_DEFAULT_FORMAT, CHANNELS, LATENCY) < 0) {
+    printf("Failed to initialize SDL_Mixer! SDL_mixer Error: %s\n", Mix_GetError());
+    return false;
+  }
+
+  gWindow = SDL_CreateWindow("Shards", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_W, WINDOW_H, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+  if (gWindow == NULL) {
+    printf("Window creation failed! SDL Error: %s\n", SDL_GetError());
+    return false;
+  }
+
+  gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+  if (gRenderer == NULL) {
+    printf("Surface creation failed! SDL Error: %s\n", SDL_GetError());
+    return false;
+  }
+
+  if (SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND) < 0) {
+    printf("Failed to set render draw blend mode! SDL Error: %s\n", SDL_GetError());
+    return false;
+  }
+  // Load character set image for rendering text
+  charset = loadTexture("charset.png");
+  if (charset == NULL) {
+    printf("Failed to load charset texture! SDL Error: %s\n", SDL_GetError());
+    return false;
+  }
+
+  // Load audio files
+  gBattleMusic = Mix_LoadWAV(BATTLE_MUSIC);
+  if (gBattleMusic == NULL) {
+    printf("Failed to load music \"%s\"! SDL_mixer Error: %s\n", BATTLE_MUSIC, Mix_GetError());
+    return false;
+  }
+  gShipSound = Mix_LoadWAV(SHIP_SOUND);
+  if (gShipSound == NULL) {
+    printf("Failed to load music \"%s\"! SDL_mixer Error: %s\n", SHIP_SOUND, Mix_GetError());
+    return false;
+  }
+  gThrustSound = Mix_LoadWAV(THRUST_SOUND);
+  if (gThrustSound == NULL) {
+    printf("Failed to load music \"%s\"! SDL_mixer Error: %s\n", THRUST_SOUND, Mix_GetError());
+    return false;
+  }
+  gStart = Mix_LoadWAV(CHANGE_SOUND);
+  if (gStart == NULL) {
+    printf("Failed to load wav \"%s\"! SDL_mixer Error: %s\n", CHANGE_SOUND, Mix_GetError());
+    return false;
+  }
+  gBoltSound = Mix_LoadWAV(BOLT_SOUND);
+  if (gBoltSound == NULL) {
+    printf("Failed to load wav \"%s\"! SDL_mixer Error: %s\n", BOLT_SOUND, Mix_GetError());
+    return false;
+  }
+  gMissileSound = Mix_LoadWAV(MISSILE_SOUND);
+  if (gMissileSound == NULL) {
+    printf("Failed to load wav \"%s\"! SDL_mixer Error: %s\n", MISSILE_SOUND, Mix_GetError());
+    return false;
+  }
+  gLaserSound = Mix_LoadWAV(LASER_SOUND);
+  if (gLaserSound == NULL) {
+    printf("Failed to load music \"%s\"! SDL_mixer Error: %s\n", LASER_SOUND, Mix_GetError());
+    return false;
+  }
+
+  return true;
 }
 
 // Clip charset image for each character and render
@@ -171,7 +233,16 @@ int main() {
     SDL_Rect levelTile = { 0, 0, TILE_SIZE, TILE_SIZE };
     const SDL_Rect UI_RECT = { 0, 0, WINDOW_W, UI_HEIGHT };
 
-    SDL_Point laserPoints[5];
+    #define LASER_POINTS_COUNT 6
+    const SDL_Point LASER_POINTS[LASER_POINTS_COUNT] = {
+      {   0, 6 },
+      { 480, 4 },
+      { 640, 0 },
+      { 480,-4 },
+      {   0,-6 },
+      {   0, 6 }
+    };
+    SDL_Point laserPoints[LASER_POINTS_COUNT] = { { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
 
     #define POWERUP_COUNT 5
     struct Powerup powerups[POWERUP_COUNT] = {
@@ -203,6 +274,11 @@ int main() {
     }
 
     bool shouldFireBolts = false;
+    bool startLaser = false;
+    bool enginesOn = false;
+
+    int musicChannel, engineChannel, thrustChannel, laserChannel;
+
     struct Actor projectiles[10] = {
       { -1.f, -1.f, 0.f, 0.f, 0, 0 },
       { -1.f, -1.f, 0.f, 0.f, 0, 0 },
@@ -231,6 +307,8 @@ int main() {
     int missileIndex = 0;
     int fireDelay = 0;
 
+    musicChannel = Mix_PlayChannel(-1, gBattleMusic, -1);
+
     while (isRunning) {
       // Background color
       SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, SDL_ALPHA_OPAQUE);
@@ -249,11 +327,20 @@ int main() {
             case SDLK_s: player.yAcc += 1; break;
             case SDLK_a: player.xAcc -= 1; break;
             case SDLK_d: player.xAcc += 1; break;
-            case SDLK_SPACE: thrustMode = true; break;
+            case SDLK_SPACE:
+              thrustMode = true;
+              Mix_HaltChannel(musicChannel);
+              thrustChannel = Mix_PlayChannel(-1, gThrustSound, -1);
+              break;
             case SDLK_LSHIFT:
               weaponMode++;
               if (weaponMode == LAST) weaponMode = BOLT;
+              Mix_PlayChannel(-1, gStart, 0);
               break;
+          }
+          if (!enginesOn && (player.xAcc || player.yAcc)) {
+            enginesOn = true;
+            engineChannel = Mix_PlayChannel(-1, gShipSound, -1);
           }
         }
         else if (event.type == SDL_KEYUP) {
@@ -263,7 +350,15 @@ int main() {
               case SDLK_s: player.yAcc -= 1; break;
               case SDLK_a: player.xAcc += 1; break;
               case SDLK_d: player.xAcc -= 1; break;
-              case SDLK_SPACE: thrustMode = false; break;
+              case SDLK_SPACE:
+                thrustMode = false;
+                musicChannel = Mix_PlayChannel(-1, gBattleMusic, -1);
+                Mix_HaltChannel(thrustChannel);
+                break;
+            }
+            if (enginesOn && player.xAcc == 0 && player.yAcc == 0) {
+              enginesOn = false;
+              Mix_HaltChannel(engineChannel);
             }
           }
         }
@@ -272,14 +367,24 @@ int main() {
 
           activateMouseInput(event.button.button);
           switch (event.button.button) {
-            case SDL_BUTTON_LEFT  : shouldFireBolts = true; break;
+            case SDL_BUTTON_LEFT:
+              shouldFireBolts = true;
+              if (weaponMode == LASER) {
+                startLaser = true;
+              }
+              break;
             case SDL_BUTTON_RIGHT : break;
           }
         }
         else if (event.type == SDL_MOUSEBUTTONUP) {
           if (wasMouseInputActive(event.button.button)) {
             switch (event.button.button) {
-              case SDL_BUTTON_LEFT  : shouldFireBolts = false; break;
+              case SDL_BUTTON_LEFT:
+              if (weaponMode == LASER && shouldFireBolts) {
+                Mix_HaltChannel(laserChannel);
+              }
+              shouldFireBolts = false;
+                break;
               case SDL_BUTTON_RIGHT : break;
             }
           }
@@ -313,6 +418,7 @@ int main() {
                 boltIndex++;
                 if (boltIndex >= 10) boltIndex = 0;
                 fireDelay = 6;
+                Mix_PlayChannel(-1, gBoltSound, 0);
               }
               else if (fireDelay > 0) fireDelay--;
               break;
@@ -322,11 +428,17 @@ int main() {
                 missileIndex++;
                 if (missileIndex >= 10) missileIndex = 0;
                 fireDelay = 12;
+                Mix_PlayChannel(-1, gMissileSound, 0);
               }
               else if (fireDelay > 0) fireDelay--;
               break;
             case LASER:
               break;
+          }
+
+          if (startLaser) {
+            laserChannel = Mix_PlayChannel(-1, gLaserSound, -1);
+            startLaser = false;
           }
 
           updateActorVelocity(&player);
@@ -549,17 +661,23 @@ int main() {
           }
 
           // TODO: Draw laser
-          // if (weaponMode == LASER) {
-          //   float pSin = sin(player.r);
-          //   float pCos = cos(player.r);
+          if (shouldFireBolts && weaponMode == LASER) {
+            float pSin = sin(player.r);
+            float pCos = cos(player.r);
 
-          //   // laserPoints[0].x = player.x + 6 * pCos;
-          //   // laserPoints[0].y = player.y + 6 * pSin;
-          //   // laserPoints[1].x =
-          //   setPaletteColor(gRenderer, 1);
-
-          //   setPaletteColor(gRenderer, 7);
-          // }
+            // laserPoints[0].x = player.x + 6 * pCos;
+            // laserPoints[0].y = player.y + 6 * pSin;
+            // laserPoints[1].x = player.x - 6 * pCos;
+            // laserPoints[1].y = player.y - 6 * pSin;
+            for (char i = 0; i < LASER_POINTS_COUNT; i++) {
+              laserPoints[i].x = player.x + (LASER_POINTS[i].x * pCos + LASER_POINTS[i].y * pSin) - camera[0];
+              laserPoints[i].y = player.y + (LASER_POINTS[i].x * pSin - LASER_POINTS[i].y * pCos) - camera[1];
+            }
+            setPaletteColor(gRenderer, 1);
+            fillPolygon(gRenderer, &laserPoints, LASER_POINTS_COUNT);
+            setPaletteColor(gRenderer, 7);
+            SDL_RenderDrawLines(gRenderer, &laserPoints, LASER_POINTS_COUNT);
+          }
 
           // Draw player
           setPaletteColor(gRenderer, 4);
@@ -625,6 +743,34 @@ int main() {
   }
 
   // Free up memory used by SDL objects and functions
+  if (gStart != NULL) {
+    Mix_FreeChunk(gStart);
+    gStart = NULL;
+  }
+  if (gBoltSound != NULL) {
+    Mix_FreeChunk(gBoltSound);
+    gBoltSound = NULL;
+  }
+  if (gMissileSound != NULL) {
+    Mix_FreeChunk(gMissileSound);
+    gMissileSound = NULL;
+  }
+  if (gLaserSound != NULL) {
+    Mix_FreeChunk(gLaserSound);
+    gLaserSound = NULL;
+  }
+  if (gThrustSound != NULL) {
+    Mix_FreeChunk(gThrustSound);
+    gThrustSound = NULL;
+  }
+  if (gShipSound != NULL) {
+    Mix_FreeChunk(gShipSound);
+    gShipSound = NULL;
+  }
+  if (gBattleMusic != NULL) {
+    Mix_FreeChunk(gBattleMusic);
+    gBattleMusic = NULL;
+  }
   if (charset != NULL) {
     SDL_DestroyTexture(charset);
     charset = NULL;
@@ -638,6 +784,8 @@ int main() {
     gWindow = NULL;
   }
 
+  Mix_Quit();
+  IMG_Quit();
   SDL_Quit();
 
   return 0;
