@@ -108,84 +108,82 @@ var decToHex = function(dec) {
   }).join('');
 }
 
-var renderPath, fill, stroke, fillRect, strokeRect, fillText, strokeText, createLinearGradient;
-(function(context) {
-  renderPath = function(pathPoints, close, xOff, yOff, rad) {
-    var xOff = typeof xOff === 'number' ? xOff : 0;
-    var yOff = typeof yOff === 'number' ? yOff : 0;
-    context.beginPath();
-    pathPoints.forEach(function(p) {
-      if (typeof rad === 'number') {
-        switch(p[0]) {
-          case 'moveTo': context.moveTo(xOff + (p[1] * Math.cos(rad)) - (p[2] * Math.sin(rad)), yOff + (p[2] * Math.cos(rad)) + (p[1] * Math.sin(rad)));
-            break;
-          case 'lineTo': context.lineTo(xOff + (p[1] * Math.cos(rad)) - (p[2] * Math.sin(rad)), yOff + (p[2] * Math.cos(rad)) + (p[1] * Math.sin(rad)));
-            break;
-        }
-      }
-      else {
-        switch(p[0]) {
-          case 'moveTo' : context.moveTo(p[1] + xOff, p[2] + yOff);
-            break;
-          case 'lineTo' : context.lineTo(p[1] + xOff, p[2] + yOff);
-            break;
-          case 'arc'  : context.arc(p[1] + xOff, p[2] + yOff, p[3], p[4], p[5]);
-            break;
-        }
-      }
-    });
-
-    if (close) context.closePath();
-  }
-
-  fill = function(fill) {
-    if (fill) context.fillStyle = fill;
-    context.fill();
-  }
-  stroke = function(stroke, lineWidth) {
-    if (stroke) context.strokeStyle = stroke;
-    if (lineWidth) context.lineWidth = lineWidth;
-    context.stroke();
-  }
-
-  fillRect = function(x, y, w, h, fill) {
-    if (fill) context.fillStyle = fill;
-    context.fillRect(x, y, w, h);
-  }
-  strokeRect = function(x, y, w, h, stroke, lineWidth) {
-    if (stroke) context.strokeStyle = stroke;
-    if (lineWidth) context.lineWidth = lineWidth;
-    context.strokeRect(x, y, w, h);
-  }
-
-  fillText = function(text, x, y, fill, options) {
-    if (fill) context.fillStyle = fill;
-    if (options) {
-      for (var o in options) {
-        if (options.hasOwnProperty(o) && context[o]) context[o] = options[o];
+var context = document.getElementById('canvas').getContext('2d');
+function renderPath(pathPoints, close, xOff, yOff, rad) {
+  var xOff = typeof xOff === 'number' ? xOff : 0;
+  var yOff = typeof yOff === 'number' ? yOff : 0;
+  context.beginPath();
+  pathPoints.forEach(function(p) {
+    if (typeof rad === 'number') {
+      switch(p[0]) {
+        case 'moveTo': context.moveTo(xOff + (p[1] * Math.cos(rad)) - (p[2] * Math.sin(rad)), yOff + (p[2] * Math.cos(rad)) + (p[1] * Math.sin(rad)));
+          break;
+        case 'lineTo': context.lineTo(xOff + (p[1] * Math.cos(rad)) - (p[2] * Math.sin(rad)), yOff + (p[2] * Math.cos(rad)) + (p[1] * Math.sin(rad)));
+          break;
       }
     }
-    context.fillText(text, x, y);
-  }
-  strokeText = function(text, x, y, stroke, lineWidth, options) {
-    if (stroke) context.strokeStyle = stroke;
-    if (lineWidth) context.lineWidth = lineWidth;
-    if (options) {
-      for (var o in options) {
-        if (options.hasOwnProperty(o) && context[o]) context[o] = options[o];
+    else {
+      switch(p[0]) {
+        case 'moveTo' : context.moveTo(p[1] + xOff, p[2] + yOff);
+          break;
+        case 'lineTo' : context.lineTo(p[1] + xOff, p[2] + yOff);
+          break;
+        case 'arc'  : context.arc(p[1] + xOff, p[2] + yOff, p[3], p[4], p[5]);
+          break;
       }
     }
-    context.strokeText(text, x, y);
-  }
+  });
 
-  createLinearGradient = function(x1, y1, x2, y2, colorStops) {
-    var grad = context.createLinearGradient(x1, y1, x2, y2);
-    colorStops.forEach(function(s, i) {
-      grad.addColorStop(i, s);
-    });
-    return grad;
+  if (close) context.closePath();
+}
+
+function fill(fill) {
+  if (fill) context.fillStyle = fill;
+  context.fill();
+}
+function stroke(stroke, lineWidth) {
+  if (stroke) context.strokeStyle = stroke;
+  if (lineWidth) context.lineWidth = lineWidth;
+  context.stroke();
+}
+
+function fillRect(x, y, w, h, fill) {
+  if (fill) context.fillStyle = fill;
+  context.fillRect(x, y, w, h);
+}
+function strokeRect(x, y, w, h, stroke, lineWidth) {
+  if (stroke) context.strokeStyle = stroke;
+  if (lineWidth) context.lineWidth = lineWidth;
+  context.strokeRect(x, y, w, h);
+}
+
+function fillText(text, x, y, fill, options) {
+  if (fill) context.fillStyle = fill;
+  if (options) {
+    for (var o in options) {
+      if (options.hasOwnProperty(o) && context[o]) context[o] = options[o];
+    }
   }
-}) (document.getElementById('canvas').getContext('2d'));
+  context.fillText(text, x, y);
+}
+function strokeText(text, x, y, stroke, lineWidth, options) {
+  if (stroke) context.strokeStyle = stroke;
+  if (lineWidth) context.lineWidth = lineWidth;
+  if (options) {
+    for (var o in options) {
+      if (options.hasOwnProperty(o) && context[o]) context[o] = options[o];
+    }
+  }
+  context.strokeText(text, x, y);
+}
+
+function createLinearGradient(x1, y1, x2, y2, colorStops) {
+  var grad = context.createLinearGradient(x1, y1, x2, y2);
+  colorStops.forEach(function(s, i) {
+    grad.addColorStop(i, s);
+  });
+  return grad;
+}
 
 var gInput = {}
 var gPlayer = {}
