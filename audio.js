@@ -1,3 +1,5 @@
+gThrusterSound = document.getElementById('thruster-sound');
+
 gAudio = (function(context) {
   AudioChannel = function() {
     this.gain = context.createGain();

@@ -193,6 +193,7 @@ var gScene = {}
 var gAudio = {}
 var gRenderer = {}
 var gCamera = {}
+var gThrusterSound;
 
 var Target = function() { return this }
 var Bolt = function() { return this }
