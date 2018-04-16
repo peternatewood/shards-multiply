@@ -91,14 +91,21 @@ gInput = {
   press: function(key) {
     var key = key.toLowerCase();
     this[key] = 1;
-    if (this.thrust == key) gPlayer.speed = THRUSTER_SPEED;
+    if (this.thrust == key) {
+      gPlayer.speed = THRUSTER_SPEED;
+      gThrusterSound.currentTime = 2;
+      gThrusterSound.play();
+    }
 
     this.update();
   },
   release: function(key) {
     var key = key.toLowerCase();
     this[key] = 0;
-    if (this.thrust == key) gPlayer.speed = PLAYER_SPEED;
+    if (this.thrust == key) {
+      gPlayer.speed = PLAYER_SPEED;
+      gThrusterSound.pause();
+    }
   },
   releaseAll: function() {
     this.w = 0;
